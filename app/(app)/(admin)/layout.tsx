@@ -1,12 +1,12 @@
 // app/(owner)/layout.tsx
-import { requireRole } from "@/lib/require-role"
+import { requireRole } from "@/lib/utils/require-role";
 
 export default async function AdminLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  await requireRole(["owner", "admin"])
+  await requireRole(["owner", "admin"]);
 
   return <>{children}</>;
 }

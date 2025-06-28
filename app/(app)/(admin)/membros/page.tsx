@@ -1,6 +1,6 @@
-import { MembersTable, Member } from "@/app/(app)/(admin)/membros/components/members-table"
-import { AddMemberDialog } from "@/app/(app)/(admin)/membros/components/add-member-dialog"
-import { getMembers } from "@/utils/supabase/server"
+import { MembersTable, Member } from "@/app/(app)/(admin)/membros/components/members-table";
+import { AddMemberDialog } from "@/app/(app)/(admin)/membros/components/add-member-dialog";
+import { getMembers } from "@/lib/utils/dataFunctions/bd-management";
 
 export default async function MembersPage() {
   const members: Member[] = await getMembers();
@@ -12,5 +12,5 @@ export default async function MembersPage() {
       </div>
       <MembersTable members={members} />
     </div>
-  )
+  );
 }

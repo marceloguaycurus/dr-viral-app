@@ -1,110 +1,113 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useCallback } from "react"
-import { Search, Bell, Settings } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Avatar, AvatarImage } from "@/components/ui/avatar"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { cn } from "@/lib/utils"
-import { useRouter } from "next/navigation"
-import { createClient } from "@/utils/supabase/client"
-import Image from "next/image"
-import { ConversationsLoading } from "./components"
+import { useState, useEffect, useCallback } from "react";
+import { Search } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils/utils";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/utils/supabase/client";
+import Image from "next/image";
+import { ConversationsLoading } from "./components";
 
 interface User {
-  name: string
+  name: string;
 }
 
 interface Message {
-  id: number
-  conversation_id: number
-  content: string
-  role: string
-  created_at: string
+  id: number;
+  conversation_id: number;
+  content: string;
+  role: string;
+  created_at: string;
 }
 
 interface Conversation {
-  id: number
-  contact_id: number
-  last_message: string
-  unread: number
-  avatar: string
-  created_at: string
-  users: User
-  is_active: boolean
-  clinic_id: string
+  id: number;
+  contact_id: number;
+  last_message: string;
+  unread: number;
+  avatar: string;
+  created_at: string;
+  users: User;
+  is_active: boolean;
+  clinic_id: string;
 }
 
 const formatConversationDate = (dateStr: string | undefined) => {
-  if (!dateStr) return '';
+  if (!dateStr) return "";
   const date = new Date(dateStr);
   const today = new Date();
-  
+
   // Reset hours to compare just the dates
   const dateWithoutTime = new Date(date.getFullYear(), date.getMonth(), date.getDate());
   const todayWithoutTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  
+
   if (dateWithoutTime.getTime() === todayWithoutTime.getTime()) {
     // If today, show only time
-    return date.toLocaleTimeString('pt-BR', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return date.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
     });
   } else {
     // If before today, show dd/MM
-    return date.toLocaleDateString('pt-BR', { 
-      day: '2-digit', 
-      month: '2-digit'
+    return date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
     });
   }
 };
 
 const formatMessageDate = (dateStr: string | undefined) => {
-  if (!dateStr) return '';
+  if (!dateStr) return "";
   const date = new Date(dateStr);
-  return date.toLocaleDateString('pt-BR', { 
-    day: '2-digit',
-    month: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).replace(',', ' -');
+  return date
+    .toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+    .replace(",", " -");
 };
 
 interface ConversationsClientProps {
-  clinicId: string
+  clinicId: string;
 }
 
 export function ConversationsClient({ clinicId }: ConversationsClientProps) {
-  const router = useRouter()
-  const [selectedConversation, setSelectedConversation] = useState<number | null>(null)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [conversations, setConversations] = useState<Conversation[]>([])
-  const [messages, setMessages] = useState<Message[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [currentClinicId, setCurrentClinicId] = useState(clinicId)
-  const supabase = createClient()
+  const router = useRouter();
+  const [selectedConversation, setSelectedConversation] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentClinicId, setCurrentClinicId] = useState(clinicId);
+  const supabase = createClient();
 
   useEffect(() => {
     if (currentClinicId !== clinicId) {
-      setIsLoading(true)
-      setCurrentClinicId(clinicId)
-      setSelectedConversation(null)
-      setConversations([])
-      setMessages([])
-      router.refresh()
+      setIsLoading(true);
+      setCurrentClinicId(clinicId);
+      setSelectedConversation(null);
+      setConversations([]);
+      setMessages([]);
+      router.refresh();
     }
-  }, [clinicId, currentClinicId, router])
+  }, [clinicId, currentClinicId, router]);
 
   const fetchConversations = useCallback(async () => {
-    if (!clinicId) return
+    if (!clinicId) return;
 
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const { data, error } = await supabase
-        .from('conversations')
-        .select(`
+        .from("conversations")
+        .select(
+          `
           id,
           contact_id,
           is_active,
@@ -117,74 +120,78 @@ export function ConversationsClient({ clinicId }: ConversationsClientProps) {
           contacts:contact_id (
             name
           )
-        `)
-        .eq('clinic_id', clinicId)
-        .order('created_at', { ascending: false })
+        `
+        )
+        .eq("clinic_id", clinicId)
+        .order("created_at", { ascending: false });
 
       if (error) {
-        console.error('Error fetching conversations:', error)
-        return
+        console.error("Error fetching conversations:", error);
+        return;
       }
 
-      const transformedData = data?.map(conversation => ({
+      const transformedData = data?.map((conversation) => ({
         ...conversation,
-        users: conversation.contacts?.[0] || { name: 'Unknown' }
-      }))
+        users: conversation.contacts?.[0] || { name: "Unknown" },
+      }));
 
-      setConversations(transformedData || [])
+      setConversations(transformedData || []);
     } catch (e) {
-      console.error('Error fetching conversations:', e)
+      console.error("Error fetching conversations:", e);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [supabase, clinicId])
+  }, [supabase, clinicId]);
 
-  const fetchMessages = useCallback(async (conversationId: number) => {
-    try {
-      const { data, error } = await supabase
-        .from('messages')
-        .select('*')
-        .eq('conversation_id', conversationId)
-        .order('created_at', { ascending: true })
+  const fetchMessages = useCallback(
+    async (conversationId: number) => {
+      try {
+        const { data, error } = await supabase
+          .from("messages")
+          .select("*")
+          .eq("conversation_id", conversationId)
+          .order("created_at", { ascending: true });
 
-      if (error) {
-        console.error('Error fetching messages:', error)
-        return
+        if (error) {
+          console.error("Error fetching messages:", error);
+          return;
+        }
+
+        setMessages(data || []);
+      } catch (e) {
+        console.error("Error fetching messages:", e);
       }
-
-      setMessages(data || [])
-    } catch (e) {
-      console.error('Error fetching messages:', e)
-    }
-  }, [supabase])
+    },
+    [supabase]
+  );
 
   useEffect(() => {
-    fetchConversations()
-  }, [fetchConversations])
+    fetchConversations();
+  }, [fetchConversations]);
 
   useEffect(() => {
     if (selectedConversation) {
-      fetchMessages(selectedConversation)
+      fetchMessages(selectedConversation);
     }
-  }, [selectedConversation, fetchMessages])
+  }, [selectedConversation, fetchMessages]);
 
   const filteredConversations = conversations.filter((conversation) => {
     if (!conversation.users || !conversation.users.name) {
-      return true // Include all conversations if name is not available
+      return true; // Include all conversations if name is not available
     }
-    return conversation.users.name.toLowerCase().includes(searchTerm.toLowerCase())
-  })
+    return conversation.users.name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   const handleSelectConversation = (id: number) => {
-    setSelectedConversation(id)
-  }
+    setSelectedConversation(id);
+  };
 
   const getSelectedConversation = () => {
-    return conversations.find((conv) => conv.id === selectedConversation)
-  }
+    return conversations.find((conv) => conv.id === selectedConversation);
+  };
 
   if (isLoading) {
-    return <ConversationsLoading />
+    return <ConversationsLoading />;
   }
 
   return (
@@ -257,7 +264,8 @@ export function ConversationsClient({ clinicId }: ConversationsClientProps) {
                 <div>
                   <h2 className="font-medium">{getSelectedConversation()?.users?.name}</h2>
                   <p className="text-xs text-muted-foreground">
-                    Paciente • Última atividade: {formatConversationDate(getSelectedConversation()?.created_at)}
+                    Paciente • Última atividade:{" "}
+                    {formatConversationDate(getSelectedConversation()?.created_at)}
                   </p>
                 </div>
               </div>
@@ -272,7 +280,10 @@ export function ConversationsClient({ clinicId }: ConversationsClientProps) {
                 {messages.map((message) => (
                   <div
                     key={message.id}
-                    className={cn("flex", message.role === "user" ? "justify-end" : "justify-start")}
+                    className={cn(
+                      "flex",
+                      message.role === "user" ? "justify-end" : "justify-start"
+                    )}
                   >
                     <div
                       className={cn(
@@ -286,7 +297,9 @@ export function ConversationsClient({ clinicId }: ConversationsClientProps) {
                       <p
                         className={cn(
                           "text-xs mt-1",
-                          message.role === "user" ? "text-primary-foreground/80" : "text-muted-foreground"
+                          message.role === "user"
+                            ? "text-primary-foreground/80"
+                            : "text-muted-foreground"
                         )}
                       >
                         {formatMessageDate(message.created_at)}
@@ -308,18 +321,18 @@ export function ConversationsClient({ clinicId }: ConversationsClientProps) {
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-center p-8">
             <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mb-4">
-              <Image 
+              <Image
                 src="/images/logo-curto.png"
-                alt="Secretaria Dora" 
-                className="w-20 h-20 rounded-full" 
+                alt="Secretaria Dora"
+                className="w-20 h-20 rounded-full"
                 width={80}
                 height={80}
               />
             </div>
             <h2 className="text-xl font-medium mb-2">Secretaria Dora</h2>
             <p className="text-muted-foreground max-w-md mb-6">
-              Selecione uma conversa para visualizar as mensagens trocadas entre a Secretaria Dora e os
-              pacientes da sua clínica.
+              Selecione uma conversa para visualizar as mensagens trocadas entre a Secretaria Dora e
+              os pacientes da sua clínica.
             </p>
             <Button variant="outline" onClick={() => router.push("/preferencias")}>
               Configurar Dora
@@ -328,5 +341,5 @@ export function ConversationsClient({ clinicId }: ConversationsClientProps) {
         )}
       </div>
     </div>
-  )
-} 
+  );
+}

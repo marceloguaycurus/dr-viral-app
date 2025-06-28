@@ -1,45 +1,66 @@
-'use server'
+"use server";
 
-import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
-import { createClient } from '@/utils/supabase/server'
+import { redirect } from "next/navigation";
+import { z } from "zod";
+import { createClient } from "@/lib/utils/supabase/server";
 
-export async function login(formData: FormData) {
-  const supabase = await createClient()
+export type ActionState = string | null;
 
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  }
+const loginSchema = z.object({
+  email: z.string().email("E-mail inválido"),
+  password: z.string().min(6, "Senha deve ter ao menos 6 caracteres"),
+});
 
-  const redirectTo = formData.get('redirectTo') as string || '/'
+const signupSchema = loginSchema
+  .extend({
+    fullName: z.string().min(2, "Informe seu nome completo"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "As senhas não coincidem",
+    path: ["confirmPassword"],
+  });
 
-  const { error } = await supabase.auth.signInWithPassword(data)
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
-  if (error) {
-    throw new Error(error.message)
-  }
+export async function loginAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const parsed = loginSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+  if (!parsed.success) return parsed.error.issues[0].message;
 
-  revalidatePath('/', 'layout')
-  redirect(redirectTo)
+  const { email, password } = parsed.data;
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) return error.message;
+
+  redirect("/");
+  return null;
 }
 
-export async function signup(formData: FormData) {
-  const supabase = await createClient()
+export async function signupAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const parsed = signupSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+    fullName: formData.get("fullName"),
+    confirmPassword: formData.get("confirmPassword"),
+  });
+  if (!parsed.success) return parsed.error.issues[0].message;
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  }
+  const { email, password, fullName } = parsed.data;
+  const supabase = await createClient();
 
-  const { error } = await supabase.auth.signUp(data)
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { full_name: fullName },
+      emailRedirectTo: `${SITE_URL}/confirm`,
+    },
+  });
+  if (error) return error.message;
 
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  revalidatePath('/', 'layout')
-  redirect('/')
+  redirect("/login?toast=success:check-email");
+  return null;
 }

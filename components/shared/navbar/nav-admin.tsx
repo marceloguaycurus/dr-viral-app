@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
   SidebarGroup,
@@ -9,10 +9,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import { adminNavigationItems } from '@/lib/constants';
-
-
+} from "@/components/ui/sidebar";
+import { adminNavigationItems } from "@/lib/constants/sidebarConstants";
 
 export function NavAdmin() {
   const pathname = usePathname();

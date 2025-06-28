@@ -1,8 +1,8 @@
 // lib/auth/require-role.ts
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
-import { getClinicServer } from "@/utils/selected-clinic-cookie";
+import { createClient } from "@/lib/utils/supabase/server";
+import { getClinicServer } from "@/lib/utils/selected-clinic-cookie";
 
 export async function requireRole(allowed: ("owner" | "admin")[]) {
   // 1. clínica atual vinda do cookie

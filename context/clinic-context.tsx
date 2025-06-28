@@ -1,11 +1,23 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  ReactNode,
+} from "react";
 import { useRouter } from "next/navigation";
-import { getClinicClient, setClinicClient, SelectedClinic } from "@/utils/selected-clinic-cookie";
+import {
+  getClinicClient,
+  setClinicClient,
+  SelectedClinic,
+} from "@/lib/utils/selected-clinic-cookie";
 import { useUserClinics } from "@/hooks/use-user-clinics";
 
-type Clinic = SelectedClinic;   // mesmo shape
+type Clinic = SelectedClinic; // mesmo shape
 
 interface ContextType {
   current: Clinic | null;
@@ -17,7 +29,13 @@ interface ContextType {
 
 const Ctx = createContext<ContextType | undefined>(undefined);
 
-export function ClinicProvider({ children, initialClinic }: { children: ReactNode; initialClinic: Clinic | null }) {
+export function ClinicProvider({
+  children,
+  initialClinic,
+}: {
+  children: ReactNode;
+  initialClinic: Clinic | null;
+}) {
   // ✅ lazy initializer: só chama getClinicClient() depois que estiver no browser
   const [current, setCurrentState] = useState<Clinic | null>(() => {
     if (initialClinic) return initialClinic;
@@ -27,12 +45,15 @@ export function ClinicProvider({ children, initialClinic }: { children: ReactNod
   const router = useRouter();
   const { clinics, isLoading, error } = useUserClinics();
 
-  const setCurrent = useCallback((c: Clinic | null) => {
-    setCurrentState(c);
-    setClinicClient(c);
-    // dispara revalidação RSCs que leem cookie
-    router.refresh();
-  }, [router]);
+  const setCurrent = useCallback(
+    (c: Clinic | null) => {
+      setCurrentState(c);
+      setClinicClient(c);
+      // dispara revalidação RSCs que leem cookie
+      router.refresh();
+    },
+    [router]
+  );
 
   // Auto-seleção da primeira clínica conforme análise sugerida
   useEffect(() => {
@@ -42,7 +63,10 @@ export function ClinicProvider({ children, initialClinic }: { children: ReactNod
   }, [current, clinics]);
 
   // Encapsular value em useMemo para evitar rerenders desnecessários
-  const value = useMemo(() => ({ current, currentClinic: current, setCurrent, isLoading, error }), [current, setCurrent, isLoading, error]);
+  const value = useMemo(
+    () => ({ current, currentClinic: current, setCurrent, isLoading, error }),
+    [current, setCurrent, isLoading, error]
+  );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

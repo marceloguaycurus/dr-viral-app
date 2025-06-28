@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 // Define types for rescheduling options
 type ReschedulingOption = {
@@ -53,18 +53,18 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
   // Minimum window before appointment
   const [minWindowHours, setMinWindowHours] = useState("2");
   const [minWindowUnit, setMinWindowUnit] = useState("horas");
-  
+
   // Cancellation deadline
   const [cancelDeadlineHours, setCancelDeadlineHours] = useState("24");
   const [cancelDeadlineUnit, setCancelDeadlineUnit] = useState("horas");
-  
+
   // Max reschedulings
   const [maxReschedulingsOpen, setMaxReschedulingsOpen] = useState(false);
   const [maxReschedulingsValue, setMaxReschedulingsValue] = useState("2");
-  
+
   // Overbooking allowed
   const [allowOverbooking, setAllowOverbooking] = useState(false);
-  
+
   const [isSaving, setIsSaving] = useState(false);
 
   // Carregar dados quando disponíveis
@@ -88,7 +88,7 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
         cancelDeadlineHours,
         cancelDeadlineUnit,
         maxReschedulingsValue,
-        allowOverbooking
+        allowOverbooking,
       });
     } catch (error) {
       console.error("Erro ao salvar:", error);
@@ -98,11 +98,7 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
   };
 
   if (error) {
-    return (
-      <div className="p-6 text-center text-destructive">
-        {error}
-      </div>
-    );
+    return <div className="p-6 text-center text-destructive">{error}</div>;
   }
 
   return (
@@ -110,15 +106,18 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
       <div>
         <h3 className="text-xl font-medium">Regras de Agendamento</h3>
         <p className="text-sm text-muted-foreground">
-          Defina os parâmetros para agendamento, cancelamento e reagendamento de consultas
+          Defina os parâmetros para agendamento, cancelamento e reagendamento de
+          consultas
         </p>
       </div>
       <Separator />
-      
+
       <div className="space-y-6">
         {/* Minimum window before appointment */}
         <div className="space-y-1">
-          <Label htmlFor="minWindowHours">Janela mínima antes da consulta</Label>
+          <Label htmlFor="minWindowHours">
+            Janela mínima antes da consulta
+          </Label>
           <div className="flex items-center gap-3">
             <Input
               id="minWindowHours"
@@ -152,7 +151,9 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            minWindowUnit === "minutos" ? "opacity-100" : "opacity-0"
+                            minWindowUnit === "minutos"
+                              ? "opacity-100"
+                              : "opacity-0"
                           )}
                         />
                         minutos
@@ -164,7 +165,9 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            minWindowUnit === "horas" ? "opacity-100" : "opacity-0"
+                            minWindowUnit === "horas"
+                              ? "opacity-100"
+                              : "opacity-0"
                           )}
                         />
                         horas
@@ -176,7 +179,9 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            minWindowUnit === "dias" ? "opacity-100" : "opacity-0"
+                            minWindowUnit === "dias"
+                              ? "opacity-100"
+                              : "opacity-0"
                           )}
                         />
                         dias
@@ -191,10 +196,12 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
             Evita marcações de última hora
           </p>
         </div>
-        
+
         {/* Cancellation deadline */}
         <div className="space-y-1">
-          <Label htmlFor="cancelDeadlineHours">Prazo limite para cancelamento</Label>
+          <Label htmlFor="cancelDeadlineHours">
+            Prazo limite para cancelamento
+          </Label>
           <div className="flex items-center gap-3">
             <Input
               id="cancelDeadlineHours"
@@ -228,7 +235,9 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            cancelDeadlineUnit === "minutos" ? "opacity-100" : "opacity-0"
+                            cancelDeadlineUnit === "minutos"
+                              ? "opacity-100"
+                              : "opacity-0"
                           )}
                         />
                         minutos
@@ -240,7 +249,9 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            cancelDeadlineUnit === "horas" ? "opacity-100" : "opacity-0"
+                            cancelDeadlineUnit === "horas"
+                              ? "opacity-100"
+                              : "opacity-0"
                           )}
                         />
                         horas
@@ -252,7 +263,9 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            cancelDeadlineUnit === "dias" ? "opacity-100" : "opacity-0"
+                            cancelDeadlineUnit === "dias"
+                              ? "opacity-100"
+                              : "opacity-0"
                           )}
                         />
                         dias
@@ -267,11 +280,16 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
             Define até quando o paciente pode cancelar sem ligar para a recepção
           </p>
         </div>
-        
+
         {/* Maximum reschedulings */}
         <div className="space-y-1">
-          <Label htmlFor="maxReschedulings">Máximo de reagendamentos por paciente</Label>
-          <Popover open={maxReschedulingsOpen} onOpenChange={setMaxReschedulingsOpen}>
+          <Label htmlFor="maxReschedulings">
+            Máximo de reagendamentos por paciente
+          </Label>
+          <Popover
+            open={maxReschedulingsOpen}
+            onOpenChange={setMaxReschedulingsOpen}
+          >
             <PopoverTrigger asChild>
               <Button
                 id="maxReschedulings"
@@ -280,7 +298,9 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
                 aria-expanded={maxReschedulingsOpen}
                 className="w-[200px] justify-between"
               >
-                {reschedulingOptions.find((option) => option.value === maxReschedulingsValue)?.label || "Selecione..."}
+                {reschedulingOptions.find(
+                  (option) => option.value === maxReschedulingsValue
+                )?.label || "Selecione..."}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
@@ -295,14 +315,20 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
                         key={option.value}
                         value={option.value}
                         onSelect={(currentValue) => {
-                          setMaxReschedulingsValue(currentValue === maxReschedulingsValue ? "" : currentValue);
+                          setMaxReschedulingsValue(
+                            currentValue === maxReschedulingsValue
+                              ? ""
+                              : currentValue
+                          );
                           setMaxReschedulingsOpen(false);
                         }}
                       >
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            maxReschedulingsValue === option.value ? "opacity-100" : "opacity-0"
+                            maxReschedulingsValue === option.value
+                              ? "opacity-100"
+                              : "opacity-0"
                           )}
                         />
                         {option.label}
@@ -314,7 +340,7 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
             </PopoverContent>
           </Popover>
         </div>
-        
+
         {/* Overbooking option */}
         <div className="space-y-1">
           <div className="flex items-center gap-2">
@@ -329,7 +355,7 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
           </div>
         </div>
       </div>
-      
+
       <div className="flex justify-end">
         <Button onClick={handleSubmit} disabled={isSaving}>
           {isSaving ? "Salvando..." : "Salvar alterações"}
@@ -337,4 +363,4 @@ export function ScheduleRules({ data, error, onSave }: ScheduleRulesProps) {
       </div>
     </div>
   );
-} 
+}
