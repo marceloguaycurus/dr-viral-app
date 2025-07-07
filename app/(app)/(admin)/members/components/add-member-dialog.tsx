@@ -1,16 +1,35 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { z } from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { addMember } from "@/app/(app)/(admin)/membros/actions"
-import { UserPlus } from "lucide-react"
+import { useState } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { addMember } from "@/app/(app)/(admin)/members/actions";
+import { UserPlus } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -19,10 +38,10 @@ const formSchema = z.object({
   role: z.enum(["manager", "member"], {
     required_error: "Por favor, selecione um cargo.",
   }),
-})
+});
 
 export function AddMemberDialog() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -30,16 +49,16 @@ export function AddMemberDialog() {
       email: "",
       role: "member",
     },
-  })
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await addMember(values)
-      form.reset()
-      setOpen(false)
-      window.location.reload()
+      await addMember(values);
+      form.reset();
+      setOpen(false);
+      window.location.reload();
     } catch (error) {
-      console.error("Erro ao adicionar membro:", error)
+      console.error("Erro ao adicionar membro:", error);
     }
   }
 
@@ -98,5 +117,5 @@ export function AddMemberDialog() {
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

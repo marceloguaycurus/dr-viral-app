@@ -1,14 +1,17 @@
-"use server"
+"use server";
 
-import { revalidatePath } from "next/cache"
-import { createClient } from "@/utils/supabase/server"
+import { revalidatePath } from "next/cache";
+import { createClient } from "@/lib/utils/supabase/server";
 
-export async function saveAgentConfig(clinicId: string, data: {
-  displayName: string;
-  avatarPreview: string;
-  tone: number;
-  activeScopes: Record<string, boolean>;
-}) {
+export async function saveAgentConfig(
+  clinicId: string,
+  data: {
+    displayName: string;
+    avatarPreview: string;
+    tone: number;
+    activeScopes: Record<string, boolean>;
+  }
+) {
   const { displayName, avatarPreview, tone, activeScopes } = data;
   const supabase = await createClient();
   const { error } = await supabase
@@ -27,4 +30,4 @@ export async function saveAgentConfig(clinicId: string, data: {
     .eq("clinic_id", clinicId);
   if (error) throw new Error(error.message);
   revalidatePath("/preferencias/agent");
-} 
+}

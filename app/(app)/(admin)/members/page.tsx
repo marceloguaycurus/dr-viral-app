@@ -1,5 +1,5 @@
-import { MembersTable, Member } from "@/app/(app)/(admin)/membros/components/members-table";
-import { AddMemberDialog } from "@/app/(app)/(admin)/membros/components/add-member-dialog";
+import { MembersTable, Member } from "@/app/(app)/(admin)/members/components/members-table";
+import { AddMemberDialog } from "@/app/(app)/(admin)/members/components/add-member-dialog";
 import { getMembers } from "@/lib/utils/dataFunctions/bd-management";
 
 export default async function MembersPage() {

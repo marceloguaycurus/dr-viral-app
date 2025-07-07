@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { adminNavigationItems } from "@/lib/constants/sidebarConstants";
+import { navigationItems } from "@/lib/constants/sidebarConstants";
 
 export function NavAdmin() {
   const pathname = usePathname();
@@ -19,22 +19,24 @@ export function NavAdmin() {
     <SidebarGroup>
       <SidebarGroupLabel>Visão Administrador</SidebarGroupLabel>
       <SidebarMenu>
-        {adminNavigationItems.map((item) => (
-          <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton
-              asChild
-              isActive={pathname === item.href}
-              variant="default"
-              tooltip={item.title}
-              className="w-full justify-start"
-            >
-              <Link href={item.href}>
-                {item.icon && <item.icon className="shrink-0" />}
-                <span className="truncate">{item.title}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
+        {navigationItems
+          .filter((item) => item.menuSection === "Administrador")
+          .map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === item.href}
+                variant="default"
+                tooltip={item.title}
+                className="w-full justify-start hover:bg-[#f5f5f5]"
+              >
+                <Link href={item.href}>
+                  {item.icon && <item.icon className="shrink-0" />}
+                  <span className="truncate">{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
       </SidebarMenu>
     </SidebarGroup>
   );

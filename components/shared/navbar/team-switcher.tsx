@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { ChevronsUpDown, Plus, Building2, RefreshCw, ShieldCheck } from "lucide-react"
+import * as React from "react";
+import { ChevronsUpDown, Plus, Building2, RefreshCw, ShieldCheck } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -10,40 +10,37 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
-import { useClinic } from "@/context/clinic-context"
-import { useUserClinics } from "@/hooks/use-user-clinics"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/sidebar";
+import { useClinic } from "@/context/clinic-context";
+import { useUserClinics } from "@/hooks/use-user-clinics";
+import { Button } from "@/components/ui/button";
 
 export function TeamSwitcher() {
-  const { isMobile } = useSidebar()
-  const { clinics, isLoading, error, refresh } = useUserClinics()
-  const { current, setCurrent } = useClinic()
+  const { isMobile } = useSidebar();
+  const { clinics, isLoading, error, refresh } = useUserClinics();
+  const { current, setCurrent } = useClinic();
 
   const handleRefresh = async (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    await refresh()
-  }
+    await refresh();
+  };
 
   const onSelect = (clinic: typeof current) => {
-    setCurrent(clinic)
-  }
+    setCurrent(clinic);
+  };
 
   if (isLoading) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton
-            size="lg"
-            className="cursor-default"
-          >
+          <SidebarMenuButton size="lg" className="cursor-default">
             <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg animate-pulse">
               <Building2 className="size-4" />
             </div>
@@ -53,18 +50,14 @@ export function TeamSwitcher() {
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
-    )
+    );
   }
 
   if (error) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton
-            size="lg"
-            variant="outline"
-            className="cursor-default"
-          >
+          <SidebarMenuButton size="lg" variant="outline" className="cursor-default">
             <div className="bg-destructive text-destructive-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
               <Building2 className="size-4" />
             </div>
@@ -72,23 +65,25 @@ export function TeamSwitcher() {
               <span className="truncate font-medium">Erro ao carregar</span>
               <span className="truncate text-xs">Tente atualizar</span>
             </div>
-            <Button variant="ghost" size="sm" onClick={handleRefresh} className="ml-auto p-1 h-auto">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleRefresh}
+              className="ml-auto p-1 h-auto"
+            >
               <RefreshCw className="size-4" />
             </Button>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
-    )
+    );
   }
 
   if (!current && clinics.length === 0) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton
-            size="lg"
-            className="cursor-default"
-          >
+          <SidebarMenuButton size="lg" className="cursor-default">
             <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
               <Building2 className="size-4" />
             </div>
@@ -96,13 +91,18 @@ export function TeamSwitcher() {
               <span className="truncate font-medium">Nenhuma clínica</span>
               <span className="truncate text-xs">Adicione uma clínica</span>
             </div>
-            <span onClick={() => alert("Funcionalidade 'Nova Clínica' não implementada.")} className="ml-auto p-1 rounded-md hover:bg-accent transition-colors" role="button" tabIndex={0}>
+            <span
+              onClick={() => alert("Funcionalidade 'Nova Clínica' não implementada.")}
+              className="ml-auto p-1 rounded-md hover:bg-accent transition-colors"
+              role="button"
+              tabIndex={0}
+            >
               <Plus className="size-4" />
             </span>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
-    )
+    );
   }
 
   return (
@@ -140,7 +140,7 @@ export function TeamSwitcher() {
                 <RefreshCw className="size-3" />
               </Button>
             </DropdownMenuLabel>
-            {clinics.map((clinic, index) => (
+            {clinics.map((clinic) => (
               <DropdownMenuItem
                 key={clinic.id}
                 onClick={() => onSelect(clinic)}
@@ -151,7 +151,7 @@ export function TeamSwitcher() {
                   <Building2 className="size-3.5 shrink-0" />
                 </div>
                 <span className="flex-1 truncate">{clinic.nome}</span>
-                {clinic.role === 'owner' && (
+                {clinic.role === "owner" && (
                   <ShieldCheck className="size-3.5 text-primary shrink-0" />
                 )}
 
@@ -164,7 +164,7 @@ export function TeamSwitcher() {
               </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
-            <DropdownMenuItem 
+            <DropdownMenuItem
               className="gap-2 p-2"
               onClick={() => alert("Funcionalidade 'Nova Clínica' não implementada.")}
             >
@@ -177,5 +177,5 @@ export function TeamSwitcher() {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

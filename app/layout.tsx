@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { ToastProvider, RouterToastListener } from "@/components/shared/toast";
 
-const inter = Inter({ subsets: ["latin"] });
+const geist = Geist({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Secretária Dora",
-  description: "Agente digital para gerenciamento de consultas em clínicas médicas",
+  title: "Boilerplate NextJS",
+  description: "Boilerplate NextJS",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`${inter.className} font-sans antialiased`}>
+      <body className={`${geist.className} font-sans antialiased`}>
         <ToastProvider>
           <RouterToastListener />
           {children}

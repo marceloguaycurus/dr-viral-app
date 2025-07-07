@@ -1,43 +1,43 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useClinic } from "@/context/clinic-context"
-import { ScheduleRules } from "@/app/(app)/preferencias/components/schedule-rules"
-import { getScheduleRules } from "@/utils/supabase/server"
-import { saveScheduleRules } from "./actions"
+import { useEffect, useState } from "react";
+import { useClinic } from "@/context/clinic-context";
+import { ScheduleRules } from "@/app/(app)/preferencias/components/schedule-rules";
+import { getScheduleRules } from "@/lib/utils/dataFunctions/bd-management";
+import { saveScheduleRules } from "./actions";
 
 export default function SchedulePage() {
-  const { current: currentClinic } = useClinic()
-  const [scheduleRules, setScheduleRules] = useState<any>(null)
-  const [scheduleError, setScheduleError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { current: currentClinic } = useClinic();
+  const [scheduleRules, setScheduleRules] = useState<any>(null);
+  const [scheduleError, setScheduleError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchScheduleRules() {
-      if (!currentClinic) return
-      
-      setLoading(true)
+      if (!currentClinic) return;
+
+      setLoading(true);
       try {
-        const rules = await getScheduleRules(currentClinic.id)
-        setScheduleRules(rules)
-        setScheduleError(null)
+        const rules = await getScheduleRules(currentClinic.id);
+        setScheduleRules(rules);
+        setScheduleError(null);
       } catch (error: any) {
-        setScheduleError(error.message)
-        setScheduleRules(null)
+        setScheduleError(error.message);
+        setScheduleRules(null);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
     if (currentClinic) {
-      fetchScheduleRules()
+      fetchScheduleRules();
     }
-  }, [currentClinic])
+  }, [currentClinic]);
 
   const handleScheduleRulesSave = async (data: any) => {
-    if (!currentClinic) return
-    await saveScheduleRules(currentClinic.id, data)
-  }
+    if (!currentClinic) return;
+    await saveScheduleRules(currentClinic.id, data);
+  };
 
   if (loading) {
     return (
@@ -51,17 +51,15 @@ export default function SchedulePage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (!currentClinic) {
     return (
       <div className="flex-1 mt-4 md:mt-0">
-        <div className="p-6 text-center text-destructive">
-          Nenhuma clínica selecionada.
-        </div>
+        <div className="p-6 text-center text-destructive">Nenhuma clínica selecionada.</div>
       </div>
-    )
+    );
   }
 
   return (
@@ -74,5 +72,5 @@ export default function SchedulePage() {
         />
       </div>
     </div>
-  )
-} 
+  );
+}

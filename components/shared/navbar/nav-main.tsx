@@ -19,24 +19,24 @@ export function NavMain() {
     <SidebarGroup>
       <SidebarGroupLabel>Visão Geral</SidebarGroupLabel>
       <SidebarMenu>
-        {navigationItems.map((item) => (
-          <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton
-              asChild
-              isActive={
-                pathname === item.href || pathname.startsWith(item.href + "/")
-              }
-              variant="default"
-              tooltip={item.title}
-              className="w-full justify-start"
-            >
-              <Link href={item.href}>
-                {item.icon && <item.icon className="shrink-0" />}
-                <span className="truncate">{item.title}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
+        {navigationItems
+          .filter((item) => item.menuSection === "Geral")
+          .map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === item.href || pathname.startsWith(item.href + "/")}
+                variant="default"
+                tooltip={item.title}
+                className="w-full justify-start hover:bg-[#f5f5f5]"
+              >
+                <Link href={item.href}>
+                  {item.icon && <item.icon className="shrink-0" />}
+                  <span className="truncate">{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
       </SidebarMenu>
     </SidebarGroup>
   );

@@ -1,35 +1,53 @@
-"use client"
+"use client";
 
-import { z } from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { updateMember } from "@/app/(app)/(admin)/membros/actions"
-import type { Member } from "@/app/(app)/(admin)/membros/components/members-table"
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { updateMember } from "@/app/(app)/(admin)/members/actions";
+import type { Member } from "@/app/(app)/(admin)/members/components/members-table";
 
 const formSchema = z.object({
   id: z.string(),
-    email: z.string().email({
+  email: z.string().email({
     message: "Por favor, insira um endereço de email válido.",
   }),
   role: z.enum(["owner", "manager", "member"], {
     required_error: "Por favor, selecione um cargo.",
   }),
-})
+});
 
 interface EditMemberDialogProps {
-  member: Member
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onMemberUpdated: (member: Member) => void
+  member: Member;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onMemberUpdated: (member: Member) => void;
 }
 
-export function EditMemberDialog({ member, open, onOpenChange, onMemberUpdated }: EditMemberDialogProps) {
+export function EditMemberDialog({
+  member,
+  open,
+  onOpenChange,
+  onMemberUpdated,
+}: EditMemberDialogProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,7 +55,7 @@ export function EditMemberDialog({ member, open, onOpenChange, onMemberUpdated }
       email: member.email,
       role: member.role,
     },
-  })
+  });
 
   // Reset form values when member changes
   useEffect(() => {
@@ -46,19 +64,19 @@ export function EditMemberDialog({ member, open, onOpenChange, onMemberUpdated }
         id: member.id,
         email: member.email,
         role: member.role,
-      })
+      });
     }
-  }, [member, form])
+  }, [member, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const updatedMember = await updateMember(values)
+      const updatedMember = await updateMember(values);
       onMemberUpdated({
         ...updatedMember,
         createdAt: member.createdAt, // Preserve the original creation date
-      })
+      });
     } catch (error) {
-      console.error("Erro ao atualizar membro:", error)
+      console.error("Erro ao atualizar membro:", error);
     }
   }
 
@@ -111,5 +129,5 @@ export function EditMemberDialog({ member, open, onOpenChange, onMemberUpdated }
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
