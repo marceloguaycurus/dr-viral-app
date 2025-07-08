@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { withBaseClasses, composeWithChildren } from "@/lib/utils/wrapper-helpers";
 
-const CardBase = withBaseClasses(ShadCard, "rounded-sm shadow-none");
+const CardBase = withBaseClasses(ShadCard, "rounded-md shadow-none");
 
 const Card = composeWithChildren(CardBase, {
   Header: withBaseClasses(ShadCardHeader),

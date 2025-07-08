@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useToast, ToastKind } from "./store";
+import { useToast, ToastKind } from "@/store/toast-store";
 
 export function RouterToastListener() {
   const router = useRouter();

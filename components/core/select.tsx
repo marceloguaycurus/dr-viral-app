@@ -13,10 +13,7 @@ import {
 import { withBaseClasses, composeWithChildren } from "@/lib/utils/wrapper-helpers";
 
 const Select = composeWithChildren(ShadSelect, {
-  Trigger: withBaseClasses(
-    ShadSelectTrigger,
-    "shadow-none focus-visible:ring-0  data-[state=open]:border-primary"
-  ),
+  Trigger: withBaseClasses(ShadSelectTrigger, "shadow-none focus-visible:ring-0  data-[state=open]:border-primary"),
   Content: withBaseClasses(ShadSelectContent),
   Item: withBaseClasses(ShadSelectItem),
   Label: withBaseClasses(ShadSelectLabel),

@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { toast } from "sonner";
-import { toastMessages, ToastMessageKey } from "./messages";
+import { toastMessages, ToastMessageKey } from "../components/shared/toast/messages";
 
 export type ToastKind = "success" | "error" | "info" | "warning";
 

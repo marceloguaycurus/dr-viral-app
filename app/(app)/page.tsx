@@ -1,33 +1,11 @@
-"use client";
+"use server";
 
-import { useState } from "react";
-import {
-  Bell,
-  Calendar,
-  ChevronDown,
-  Download,
-  Filter,
-  Mail,
-  Plus,
-  Star,
-  AlertCircle,
-  Info,
-  HomeIcon,
-} from "lucide-react";
+import { Bell, Calendar, ChevronDown, Download, Filter, Mail, Plus, Star, AlertCircle, Info, HomeIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/core/button";
 import { Card } from "@/components/core/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,19 +23,9 @@ import { Select } from "@/components/core/select";
 import { Separator } from "@/components/ui/separator";
 
 import { Switch } from "@/components/ui/switch";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs } from "@/components/core/tabs";
 import { Textarea } from "@/components/core/textarea";
-
-import { useToast } from "@/components/shared/toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Alert } from "@/components/core/alert";
 import {
@@ -76,16 +44,12 @@ import { Slider } from "@/components/ui/slider";
 import { Toggle } from "@/components/ui/toggle";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import prisma from "@/lib/utils/prisma";
+import BasicModal from "@/components/shared/modal/basic-modal";
+import ButtonWithToast from "@/components/shared/button-with-toast";
 
-export default function ShadcnTemplate() {
-  const [progress, setProgress] = useState(33);
-  const pushToast = useToast();
-
-  const tableData = [
-    { id: "1", name: "John Doe", email: "john@example.com", role: "Admin", status: "Active" },
-    { id: "2", name: "Jane Smith", email: "jane@example.com", role: "User", status: "Inactive" },
-    { id: "3", name: "Bob Johnson", email: "bob@example.com", role: "Moderator", status: "Active" },
-  ];
+export default async function ShadcnTemplate() {
+  const tableData = await prisma.tableData.findMany();
 
   return (
     <TooltipProvider>
@@ -142,21 +106,15 @@ export default function ShadcnTemplate() {
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
                       <span>Progress</span>
-                      <span className="font-medium">{progress}%</span>
+                      <span className="font-medium">45%</span>
                     </div>
-                    <Progress value={progress} className="w-full" />
+                    <Progress value={45} className="w-full" />
                   </div>
                 </Card.Content>
                 <Card.Footer className="flex justify-end">
                   <div className="flex space-x-2 justify-end">
-                    <Button size="sm" onClick={() => setProgress(Math.min(100, progress + 10))}>
-                      Increase
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setProgress(Math.max(0, progress - 10))}
-                    >
+                    <Button size="sm">Increase</Button>
+                    <Button size="sm" variant="outline">
                       Decrease
                     </Button>
                   </div>
@@ -204,39 +162,15 @@ export default function ShadcnTemplate() {
                   <Card.Title>Quick Actions</Card.Title>
                   <Card.Description>Frequently used actions and shortcuts.</Card.Description>
                 </Card.Header>
-                <Card.Content>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" size="sm">
-                          <Plus className="mr-2 h-4 w-4" />
-                          Create
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Create New Item</DialogTitle>
-                          <DialogDescription>Fill out the form below to create a new item.</DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                              Name
-                            </Label>
-                            <Input id="name" className="col-span-3" />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="description" className="text-right">
-                              Description
-                            </Label>
-                            <Textarea id="description" className="col-span-3" />
-                          </div>
-                        </div>
-                        <DialogFooter>
-                          <Button type="submit">Create</Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
+                <Card.Content></Card.Content>
+                <Card.Footer className="flex">
+                  <div className="grid grid-cols-2 gap-2 w-full">
+                    <BasicModal title="Crie um novo item" description="Preencha o formulário abaixo para criar um novo item.">
+                      <Button variant="outline" size="sm">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Criar
+                      </Button>
+                    </BasicModal>
 
                     <Button variant="outline" size="sm">
                       <Download className="mr-2 h-4 w-4" />
@@ -254,9 +188,7 @@ export default function ShadcnTemplate() {
                         <div className="grid gap-4">
                           <div className="space-y-2">
                             <h4 className="font-medium leading-none">Filter Options</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Set the filter criteria for the data.
-                            </p>
+                            <p className="text-sm text-muted-foreground">Set the filter criteria for the data.</p>
                           </div>
                           <div className="grid gap-2">
                             <div className="grid grid-cols-3 items-center gap-4">
@@ -290,22 +222,18 @@ export default function ShadcnTemplate() {
                       </PopoverContent>
                     </Popover>
 
-                    <Button
+                    <ButtonWithToast
+                      kind="info"
+                      code="sample-message"
+                      override="This is a sample toast message."
                       variant="outline"
                       size="sm"
-                      onClick={() =>
-                        pushToast({
-                          kind: "info",
-                          code: "sample-message",
-                          override: "This is a sample toast message.",
-                        })
-                      }
                     >
                       <Bell className="mr-2 h-4 w-4" />
                       Toast
-                    </Button>
+                    </ButtonWithToast>
                   </div>
-                </Card.Content>
+                </Card.Footer>
               </Card>
             </div>
           </div>
@@ -324,9 +252,7 @@ export default function ShadcnTemplate() {
                 <Card>
                   <Card.Header>
                     <Card.Title>Overview Dashboard</Card.Title>
-                    <Card.Description>
-                      A comprehensive view of your system status and metrics.
-                    </Card.Description>
+                    <Card.Description>A comprehensive view of your system status and metrics.</Card.Description>
                   </Card.Header>
                   <Card.Content>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -395,7 +321,6 @@ export default function ShadcnTemplate() {
                   <TableCaption>A list of users in your system.</TableCaption>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[100px]">ID</TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Email</TableHead>
                       <TableHead>Role</TableHead>
@@ -406,7 +331,6 @@ export default function ShadcnTemplate() {
                   <TableBody>
                     {tableData.map((user) => (
                       <TableRow key={user.id}>
-                        <TableCell className="font-medium">{user.id}</TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-2">
                             <Avatar className="h-6 w-6">
@@ -425,9 +349,7 @@ export default function ShadcnTemplate() {
                           <Badge variant={user.role === "Admin" ? "default" : "secondary"}>{user.role}</Badge>
                         </TableCell>
                         <TableCell>
-                          <Badge variant={user.status === "Active" ? "default" : "destructive"}>
-                            {user.status}
-                          </Badge>
+                          <Badge variant={user.status === "Active" ? "default" : "destructive"}>{user.status}</Badge>
                         </TableCell>
                         <TableCell className="text-right">
                           <DropdownMenu>
@@ -580,29 +502,29 @@ export default function ShadcnTemplate() {
                   <AccordionItem value="item-1">
                     <AccordionTrigger>How do I get started?</AccordionTrigger>
                     <AccordionContent>
-                      Getting started is easy! Simply sign up for an account and follow our onboarding guide.
-                      You&apos;ll be up and running in no time.
+                      Getting started is easy! Simply sign up for an account and follow our onboarding guide. You&apos;ll be up and running
+                      in no time.
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-2">
                     <AccordionTrigger>What payment methods do you accept?</AccordionTrigger>
                     <AccordionContent>
-                      We accept all major credit cards, PayPal, and bank transfers. All payments are processed
-                      securely through our payment partners.
+                      We accept all major credit cards, PayPal, and bank transfers. All payments are processed securely through our payment
+                      partners.
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-3">
                     <AccordionTrigger>Can I cancel my subscription anytime?</AccordionTrigger>
                     <AccordionContent>
-                      Yes, you can cancel your subscription at any time from your account settings. There are
-                      no cancellation fees or penalties.
+                      Yes, you can cancel your subscription at any time from your account settings. There are no cancellation fees or
+                      penalties.
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-4">
                     <AccordionTrigger>Do you offer customer support?</AccordionTrigger>
                     <AccordionContent>
-                      We offer 24/7 customer support through email, chat, and phone. Our support team is
-                      always ready to help you with any questions or issues.
+                      We offer 24/7 customer support through email, chat, and phone. Our support team is always ready to help you with any
+                      questions or issues.
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
@@ -616,9 +538,7 @@ export default function ShadcnTemplate() {
             <Card>
               <Card.Header>
                 <Card.Title>Hover Cards & Tooltips</Card.Title>
-                <Card.Description>
-                  Interactive elements that provide additional information on hover.
-                </Card.Description>
+                <Card.Description>Interactive elements that provide additional information on hover.</Card.Description>
               </Card.Header>
               <Card.Content>
                 <div className="flex flex-wrap gap-4">
@@ -634,9 +554,7 @@ export default function ShadcnTemplate() {
                         </Avatar>
                         <div className="space-y-1">
                           <h4 className="text-sm font-semibold">@shadcn</h4>
-                          <p className="text-sm">
-                            The React framework for production – created and maintained by @vercel.
-                          </p>
+                          <p className="text-sm">The React framework for production – created and maintained by @vercel.</p>
                           <div className="flex items-center pt-2">
                             <Calendar className="mr-2 h-4 w-4 opacity-70" />
                             <span className="text-xs text-muted-foreground">Joined December 2021</span>
@@ -663,8 +581,7 @@ export default function ShadcnTemplate() {
                       <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This action cannot be undone. This will permanently delete your account and remove
-                          your data from our servers.
+                          This action cannot be undone. This will permanently delete your account and remove your data from our servers.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
