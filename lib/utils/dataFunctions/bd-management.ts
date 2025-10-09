@@ -1,8 +1,7 @@
 "use server";
 
-import type { UserData } from "@/lib/types/UserTypes";
+import type { UserData, Member, MemberDbResponse } from "@/lib/types/UserTypes";
 import { getClinicServer } from "@/lib/utils/selected-clinic-cookie";
-import type { Member } from "@/app/(app)/(admin)/members/components/members-table";
 import { createClient } from "@/lib/utils/supabase/server";
 
 export async function getAgentConfig(clinicId: string) {
@@ -114,26 +113,6 @@ export async function getIntegrationConfig(clinicId: string) {
   };
 }
 
-// Reminders
-export async function getReminders(clinicId: string) {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("config_reminders")
-    .select("id, trigger_name, trigger_type, advance_time, channel, is_active")
-    .eq("clinic_id", clinicId);
-
-  if (error) throw error;
-
-  return (data || []).map((item: any) => ({
-    id: item.id,
-    evento: item.trigger_name,
-    gatilho: item.trigger_type,
-    antecedencia: item.advance_time,
-    canal: item.channel,
-    status: item.is_active,
-  }));
-}
-
 // Schedule Rules
 export async function getScheduleRules(clinicId: string) {
   const supabase = await createClient();
@@ -188,10 +167,10 @@ export async function getMembers(): Promise<Member[]> {
   const supabase = await createClient();
   const { data, error } = await supabase.from("membros_clinica").select("user_id, email, role, created_at").eq("clinic_id", clinic.id);
   if (error) throw error;
-  return (data || []).map((item: any) => ({
+  return (data || []).map((item: MemberDbResponse) => ({
     id: item.user_id,
     email: item.email,
-    role: item.role,
+    role: item.role as "owner" | "manager" | "member",
     createdAt: new Date(item.created_at),
   }));
 }

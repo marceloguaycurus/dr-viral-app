@@ -1,31 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { EditMemberDialog } from "@/app/(app)/(admin)/members/components/edit-member-dialog";
 import { deleteMember } from "@/app/(app)/(admin)/members/actions";
-
-export type Member = {
-  id: string;
-  email: string;
-  role: "owner" | "manager" | "member";
-  createdAt: Date;
-};
+import type { Member } from "@/lib/types/UserTypes";
 
 type MembersTableProps = { members: Member[] };
 export function MembersTable({ members: initialMembers }: MembersTableProps) {
