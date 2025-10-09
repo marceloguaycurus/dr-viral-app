@@ -44,13 +44,20 @@ import { Slider } from "@/components/ui/slider";
 import { Toggle } from "@/components/ui/toggle";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import prisma from "@/lib/utils/prisma";
 import BasicModal from "@/components/shared/modal/basic-modal";
 import ButtonWithToast from "@/components/shared/button-with-toast";
 
-export default async function ShadcnTemplate() {
-  const tableData = await prisma.tableData.findMany();
+const tableData = [
+  {
+    id: 1,
+    name: "John Doe",
+    email: "john@example.com",
+    role: "Admin",
+    status: "Active",
+  },
+];
 
+export default async function ShadcnTemplate() {
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-background">
@@ -329,7 +336,7 @@ export default async function ShadcnTemplate() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {tableData.map((user: { id: string; name: string; email: string; role: string; status: string }) => (
+                    {tableData.map((user: { id: number; name: string; email: string; role: string; status: string }) => (
                       <TableRow key={user.id}>
                         <TableCell>
                           <div className="flex items-center space-x-2">
