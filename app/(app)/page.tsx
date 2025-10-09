@@ -3,8 +3,8 @@
 import { Bell, Calendar, ChevronDown, Download, Filter, Mail, Plus, Star, AlertCircle, Info, HomeIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/core/button";
-import { Card } from "@/components/core/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -14,20 +14,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/core/input";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select } from "@/components/core/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tabs } from "@/components/core/tabs";
-import { Textarea } from "@/components/core/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Alert } from "@/components/core/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -79,13 +79,13 @@ export default async function ShadcnTemplate() {
             <h2 className="text-xl font-semibold">Alerts & Notifications</h2>
             <Alert>
               <Info />
-              <Alert.Title>Information</Alert.Title>
-              <Alert.Description>This is an informational alert with an icon.</Alert.Description>
+              <AlertTitle>Information</AlertTitle>
+              <AlertDescription>This is an informational alert with an icon.</AlertDescription>
             </Alert>
             <Alert variant="destructive">
               <AlertCircle />
-              <Alert.Title>Error</Alert.Title>
-              <Alert.Description>This is a destructive alert variant.</Alert.Description>
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>This is a destructive alert variant.</AlertDescription>
             </Alert>
           </div>
 
@@ -94,15 +94,15 @@ export default async function ShadcnTemplate() {
             <h2 className="text-xl font-semibold mb-4">Cards & Content</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <Card>
-                <Card.Header>
-                  <Card.Title className="flex items-center justify-between">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
                     Statistics
                     <Badge variant="secondary">New</Badge>
-                  </Card.Title>
-                  <Card.Description>Overview of key metrics and performance indicators.</Card.Description>
-                </Card.Header>
+                  </CardTitle>
+                  <CardDescription>Overview of key metrics and performance indicators.</CardDescription>
+                </CardHeader>
                 <Separator />
-                <Card.Content>
+                <CardContent>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
                       <span>Progress</span>
@@ -110,23 +110,23 @@ export default async function ShadcnTemplate() {
                     </div>
                     <Progress value={45} className="w-full" />
                   </div>
-                </Card.Content>
-                <Card.Footer className="flex justify-end">
+                </CardContent>
+                <CardFooter className="flex justify-end">
                   <div className="flex space-x-2 justify-end">
                     <Button size="sm">Increase</Button>
                     <Button size="sm" variant="outline">
                       Decrease
                     </Button>
                   </div>
-                </Card.Footer>
+                </CardFooter>
               </Card>
 
               <Card>
-                <Card.Header>
-                  <Card.Title>User Profile</Card.Title>
-                  <Card.Description>Manage your account settings and preferences.</Card.Description>
-                </Card.Header>
-                <Card.Content>
+                <CardHeader>
+                  <CardTitle>User Profile</CardTitle>
+                  <CardDescription>Manage your account settings and preferences.</CardDescription>
+                </CardHeader>
+                <CardContent>
                   <div className="flex items-center space-x-4">
                     <Avatar>
                       <AvatarImage src="/placeholder.svg?height=40&width=40" />
@@ -148,22 +148,22 @@ export default async function ShadcnTemplate() {
                       <Switch id="marketing" />
                     </div>
                   </div>
-                </Card.Content>
-                <Card.Footer className="flex gap-2">
+                </CardContent>
+                <CardFooter className="flex gap-2">
                   <Button className="flex-1">Save Changes</Button>
                   <Button variant="outline" size="icon">
                     <Plus />
                   </Button>
-                </Card.Footer>
+                </CardFooter>
               </Card>
 
               <Card>
-                <Card.Header>
-                  <Card.Title>Quick Actions</Card.Title>
-                  <Card.Description>Frequently used actions and shortcuts.</Card.Description>
-                </Card.Header>
-                <Card.Content></Card.Content>
-                <Card.Footer className="flex">
+                <CardHeader>
+                  <CardTitle>Quick Actions</CardTitle>
+                  <CardDescription>Frequently used actions and shortcuts.</CardDescription>
+                </CardHeader>
+                <CardContent></CardContent>
+                <CardFooter className="flex">
                   <div className="grid grid-cols-2 gap-2 w-full">
                     <BasicModal title="Crie um novo item" description="Preencha o formulário abaixo para criar um novo item.">
                       <Button variant="outline" size="sm">
@@ -194,27 +194,27 @@ export default async function ShadcnTemplate() {
                             <div className="grid grid-cols-3 items-center gap-4">
                               <Label htmlFor="status">Status</Label>
                               <Select>
-                                <Select.Trigger className="col-span-2">
-                                  <Select.Value placeholder="Select status" />
-                                </Select.Trigger>
-                                <Select.Content>
-                                  <Select.Item value="active">Active</Select.Item>
-                                  <Select.Item value="inactive">Inactive</Select.Item>
-                                  <Select.Item value="pending">Pending</Select.Item>
-                                </Select.Content>
+                                <SelectTrigger className="col-span-2">
+                                  <SelectValue placeholder="Select status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="active">Active</SelectItem>
+                                  <SelectItem value="inactive">Inactive</SelectItem>
+                                  <SelectItem value="pending">Pending</SelectItem>
+                                </SelectContent>
                               </Select>
                             </div>
                             <div className="grid grid-cols-3 items-center gap-4">
                               <Label htmlFor="role">Role</Label>
                               <Select>
-                                <Select.Trigger className="col-span-2">
-                                  <Select.Value placeholder="Select role" />
-                                </Select.Trigger>
-                                <Select.Content>
-                                  <Select.Item value="admin">Admin</Select.Item>
-                                  <Select.Item value="user">User</Select.Item>
-                                  <Select.Item value="moderator">Moderator</Select.Item>
-                                </Select.Content>
+                                <SelectTrigger className="col-span-2">
+                                  <SelectValue placeholder="Select role" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="admin">Admin</SelectItem>
+                                  <SelectItem value="user">User</SelectItem>
+                                  <SelectItem value="moderator">Moderator</SelectItem>
+                                </SelectContent>
                               </Select>
                             </div>
                           </div>
@@ -233,7 +233,7 @@ export default async function ShadcnTemplate() {
                       Toast
                     </ButtonWithToast>
                   </div>
-                </Card.Footer>
+                </CardFooter>
               </Card>
             </div>
           </div>
@@ -242,19 +242,19 @@ export default async function ShadcnTemplate() {
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-4">Tabs & Navigation</h2>
             <Tabs defaultValue="overview" className="w-full">
-              <Tabs.List className="grid w-full grid-cols-4">
-                <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
-                <Tabs.Trigger value="analytics">Analytics</Tabs.Trigger>
-                <Tabs.Trigger value="reports">Reports</Tabs.Trigger>
-                <Tabs.Trigger value="notifications">Notifications</Tabs.Trigger>
-              </Tabs.List>
-              <Tabs.Content value="overview" className="space-y-4">
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="overview">Overview</TabsTrigger>
+                <TabsTrigger value="analytics">Analytics</TabsTrigger>
+                <TabsTrigger value="reports">Reports</TabsTrigger>
+                <TabsTrigger value="notifications">Notifications</TabsTrigger>
+              </TabsList>
+              <TabsContent value="overview" className="space-y-4">
                 <Card>
-                  <Card.Header>
-                    <Card.Title>Overview Dashboard</Card.Title>
-                    <Card.Description>A comprehensive view of your system status and metrics.</Card.Description>
-                  </Card.Header>
-                  <Card.Content>
+                  <CardHeader>
+                    <CardTitle>Overview Dashboard</CardTitle>
+                    <CardDescription>A comprehensive view of your system status and metrics.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="text-center">
                         <div className="text-2xl font-bold">1,234</div>
@@ -269,42 +269,42 @@ export default async function ShadcnTemplate() {
                         <div className="text-sm text-muted-foreground">Uptime</div>
                       </div>
                     </div>
-                  </Card.Content>
+                  </CardContent>
                 </Card>
-              </Tabs.Content>
-              <Tabs.Content value="analytics">
+              </TabsContent>
+              <TabsContent value="analytics">
                 <Card>
-                  <Card.Header>
-                    <Card.Title>Analytics</Card.Title>
-                    <Card.Description>Detailed analytics and performance metrics.</Card.Description>
-                  </Card.Header>
-                  <Card.Content>
+                  <CardHeader>
+                    <CardTitle>Analytics</CardTitle>
+                    <CardDescription>Detailed analytics and performance metrics.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
                     <p>Analytics content would go here.</p>
-                  </Card.Content>
+                  </CardContent>
                 </Card>
-              </Tabs.Content>
-              <Tabs.Content value="reports">
+              </TabsContent>
+              <TabsContent value="reports">
                 <Card>
-                  <Card.Header>
-                    <Card.Title>Reports</Card.Title>
-                    <Card.Description>Generate and view various reports.</Card.Description>
-                  </Card.Header>
-                  <Card.Content>
+                  <CardHeader>
+                    <CardTitle>Reports</CardTitle>
+                    <CardDescription>Generate and view various reports.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
                     <p>Reports content would go here.</p>
-                  </Card.Content>
+                  </CardContent>
                 </Card>
-              </Tabs.Content>
-              <Tabs.Content value="notifications">
+              </TabsContent>
+              <TabsContent value="notifications">
                 <Card>
-                  <Card.Header>
-                    <Card.Title>Notifications</Card.Title>
-                    <Card.Description>Manage your notification preferences.</Card.Description>
-                  </Card.Header>
-                  <Card.Content>
+                  <CardHeader>
+                    <CardTitle>Notifications</CardTitle>
+                    <CardDescription>Manage your notification preferences.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
                     <p>Notification settings would go here.</p>
-                  </Card.Content>
+                  </CardContent>
                 </Card>
-              </Tabs.Content>
+              </TabsContent>
             </Tabs>
           </div>
 
@@ -312,11 +312,11 @@ export default async function ShadcnTemplate() {
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-4">Data Tables</h2>
             <Card>
-              <Card.Header>
-                <Card.Title>User Management</Card.Title>
-                <Card.Description>Manage users and their permissions in your system.</Card.Description>
-              </Card.Header>
-              <Card.Content>
+              <CardHeader>
+                <CardTitle>User Management</CardTitle>
+                <CardDescription>Manage users and their permissions in your system.</CardDescription>
+              </CardHeader>
+              <CardContent>
                 <Table>
                   <TableCaption>A list of users in your system.</TableCaption>
                   <TableHeader>
@@ -329,7 +329,7 @@ export default async function ShadcnTemplate() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {tableData.map((user) => (
+                    {tableData.map((user: { id: string; name: string; email: string; role: string; status: string }) => (
                       <TableRow key={user.id}>
                         <TableCell>
                           <div className="flex items-center space-x-2">
@@ -372,7 +372,7 @@ export default async function ShadcnTemplate() {
                     ))}
                   </TableBody>
                 </Table>
-              </Card.Content>
+              </CardContent>
             </Card>
           </div>
 
@@ -381,11 +381,11 @@ export default async function ShadcnTemplate() {
             <h2 className="text-xl font-semibold mb-4">Forms & Inputs</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
-                <Card.Header>
-                  <Card.Title>Contact Form</Card.Title>
-                  <Card.Description>Fill out this form to get in touch with us.</Card.Description>
-                </Card.Header>
-                <Card.Content className="space-y-4">
+                <CardHeader>
+                  <CardTitle>Contact Form</CardTitle>
+                  <CardDescription>Fill out this form to get in touch with us.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">First Name</Label>
@@ -403,14 +403,14 @@ export default async function ShadcnTemplate() {
                   <div className="space-y-2">
                     <Label htmlFor="subject">Subject</Label>
                     <Select>
-                      <Select.Trigger>
-                        <Select.Value placeholder="Select a subject" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        <Select.Item value="general">General Inquiry</Select.Item>
-                        <Select.Item value="support">Support</Select.Item>
-                        <Select.Item value="billing">Billing</Select.Item>
-                      </Select.Content>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a subject" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="general">General Inquiry</SelectItem>
+                        <SelectItem value="support">Support</SelectItem>
+                        <SelectItem value="billing">Billing</SelectItem>
+                      </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
@@ -421,18 +421,18 @@ export default async function ShadcnTemplate() {
                     <Checkbox id="newsletter" />
                     <Label htmlFor="newsletter">Subscribe to newsletter</Label>
                   </div>
-                </Card.Content>
-                <Card.Footer>
+                </CardContent>
+                <CardFooter>
                   <Button className="w-full">Send Message</Button>
-                </Card.Footer>
+                </CardFooter>
               </Card>
 
               <Card>
-                <Card.Header>
-                  <Card.Title>Preferences</Card.Title>
-                  <Card.Description>Configure your application preferences.</Card.Description>
-                </Card.Header>
-                <Card.Content className="space-y-6">
+                <CardHeader>
+                  <CardTitle>Preferences</CardTitle>
+                  <CardDescription>Configure your application preferences.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
                   <div className="space-y-3">
                     <Label>Theme Preference</Label>
                     <RadioGroup defaultValue="system">
@@ -479,12 +479,12 @@ export default async function ShadcnTemplate() {
                       </Toggle>
                     </div>
                   </div>
-                </Card.Content>
-                <Card.Footer>
+                </CardContent>
+                <CardFooter>
                   <Button variant="outline" className="w-full bg-transparent">
                     Save Preferences
                   </Button>
-                </Card.Footer>
+                </CardFooter>
               </Card>
             </div>
           </div>
@@ -493,11 +493,11 @@ export default async function ShadcnTemplate() {
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-4">Accordion & Collapsible</h2>
             <Card>
-              <Card.Header>
-                <Card.Title>Frequently Asked Questions</Card.Title>
-                <Card.Description>Common questions and answers about our service.</Card.Description>
-              </Card.Header>
-              <Card.Content>
+              <CardHeader>
+                <CardTitle>Frequently Asked Questions</CardTitle>
+                <CardDescription>Common questions and answers about our service.</CardDescription>
+              </CardHeader>
+              <CardContent>
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="item-1">
                     <AccordionTrigger>How do I get started?</AccordionTrigger>
@@ -528,7 +528,7 @@ export default async function ShadcnTemplate() {
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
-              </Card.Content>
+              </CardContent>
             </Card>
           </div>
 
@@ -536,11 +536,11 @@ export default async function ShadcnTemplate() {
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-4">Interactive Elements</h2>
             <Card>
-              <Card.Header>
-                <Card.Title>Hover Cards & Tooltips</Card.Title>
-                <Card.Description>Interactive elements that provide additional information on hover.</Card.Description>
-              </Card.Header>
-              <Card.Content>
+              <CardHeader>
+                <CardTitle>Hover Cards & Tooltips</CardTitle>
+                <CardDescription>Interactive elements that provide additional information on hover.</CardDescription>
+              </CardHeader>
+              <CardContent>
                 <div className="flex flex-wrap gap-4">
                   <HoverCard>
                     <HoverCardTrigger asChild>
@@ -591,7 +591,7 @@ export default async function ShadcnTemplate() {
                     </AlertDialogContent>
                   </AlertDialog>
                 </div>
-              </Card.Content>
+              </CardContent>
             </Card>
           </div>
         </main>

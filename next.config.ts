@@ -2,8 +2,13 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  typescript: {
+    // Fail build on TypeScript errors
+    ignoreBuildErrors: false,
+  },
   eslint: {
-    ignoreDuringBuilds: true,
+    // Fail build on ESLint errors
+    ignoreDuringBuilds: false,
   },
 };
 

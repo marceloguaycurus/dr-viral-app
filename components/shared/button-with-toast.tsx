@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/core/button";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/shared/toast";
 import { ToastKind } from "@/stores/toast-store";
 
@@ -11,7 +11,7 @@ export default function ButtonWithToast({
   children,
   ...buttonProps
 }: {
-  kind?: ToastKind;
+  kind: ToastKind;
   code: string;
   override?: string;
   children: React.ReactNode;
@@ -22,9 +22,9 @@ export default function ButtonWithToast({
     <Button
       onClick={() =>
         pushToast({
-          kind,
+          kind: kind,
           code,
-          override,
+          override: override ?? "",
         })
       }
       {...buttonProps}

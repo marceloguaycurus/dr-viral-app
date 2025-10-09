@@ -15,16 +15,13 @@ const passwordSchema = z
     path: ["confirmNewPassword"],
   });
 
-export async function updatePasswordAction(
-  _prev: ActionState,
-  formData: FormData
-): Promise<ActionState> {
+export async function updatePasswordAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const parsed = passwordSchema.safeParse({
     newPassword: formData.get("newPassword"),
     confirmNewPassword: formData.get("confirmNewPassword"),
   });
 
-  if (!parsed.success) return parsed.error.issues[0].message;
+  if (!parsed.success) return parsed.error.issues[0]?.message ?? null;
 
   const { newPassword } = parsed.data as { newPassword: string };
 

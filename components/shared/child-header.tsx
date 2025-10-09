@@ -10,9 +10,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Input } from "@/components/core/input";
+import { Input } from "@/components/ui/input";
 import { Bell, Search } from "lucide-react";
-import { Button } from "@/components/core/button";
+import { Button } from "@/components/ui/button";
 import { Fragment } from "react";
 
 type Props = {

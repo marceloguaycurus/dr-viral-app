@@ -28,7 +28,7 @@ export async function loginAction(_prev: ActionState, formData: FormData): Promi
     email: formData.get("email"),
     password: formData.get("password"),
   });
-  if (!parsed.success) return parsed.error.issues[0].message;
+  if (!parsed.success) return parsed.error.issues[0]?.message ?? null;
 
   const { email, password } = parsed.data;
   const supabase = await createClient();
@@ -46,7 +46,7 @@ export async function signupAction(_prev: ActionState, formData: FormData): Prom
     fullName: formData.get("fullName"),
     confirmPassword: formData.get("confirmPassword"),
   });
-  if (!parsed.success) return parsed.error.issues[0].message;
+  if (!parsed.success) return parsed.error.issues[0]?.message ?? null;
 
   const { email, password, fullName } = parsed.data;
   const supabase = await createClient();
