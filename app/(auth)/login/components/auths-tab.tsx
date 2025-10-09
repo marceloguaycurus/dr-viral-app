@@ -6,7 +6,11 @@ import SignupTab from "./signup-tab";
 import { AuthFormValues } from "@/lib/types/UserTypes";
 import { useState } from "react";
 
-export default function AuthsTab() {
+type AuthsTabProps = {
+  redirectTo: string;
+};
+
+export default function AuthsTab({ redirectTo }: AuthsTabProps) {
   const [formValues, setFormValues] = useState<AuthFormValues>({
     email: "",
     password: "",
@@ -21,7 +25,7 @@ export default function AuthsTab() {
         <TabsTrigger value="signup">Cadastro</TabsTrigger>
       </TabsList>
 
-      <LoginTab formValues={formValues} setFormValues={setFormValues} />
+      <LoginTab formValues={formValues} setFormValues={setFormValues} redirectTo={redirectTo} />
       <SignupTab formValues={formValues} setFormValues={setFormValues} />
     </Tabs>
   );

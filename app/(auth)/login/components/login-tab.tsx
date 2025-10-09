@@ -5,7 +5,6 @@ import { Mail, Lock } from "lucide-react";
 import { TabsContent } from "@/components/ui/tabs";
 import { useActionState, useEffect } from "react";
 import { loginAction } from "@/app/(auth)/login/actions";
-import { useSearchParams } from "next/navigation";
 import { AuthFormValues } from "@/lib/types/UserTypes";
 import errorTranslation from "@/lib/utils/supabase/error-transtaltion";
 import { useToast } from "@/components/shared/toast";
@@ -14,6 +13,7 @@ import { createClient } from "@/lib/utils/supabase/client";
 type LoginTabProps = {
   formValues: AuthFormValues;
   setFormValues: (formValues: AuthFormValues) => void;
+  redirectTo: string;
 };
 
 // Define fallback SITE_URL just like server actions
@@ -27,9 +27,8 @@ async function requestPasswordReset(email: string) {
   });
 }
 
-export default function LoginTab({ formValues, setFormValues }: LoginTabProps) {
+export default function LoginTab({ formValues, setFormValues, redirectTo }: LoginTabProps) {
   const [error, formAction, isPending] = useActionState(loginAction, null);
-  const redirectTo = useSearchParams().get("redirectTo") || "/";
 
   const pushToast = useToast();
 

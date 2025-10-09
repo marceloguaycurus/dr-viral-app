@@ -6,14 +6,22 @@ import LoginHeader from "./components/login-header";
 import AuthsTab from "./components/auths-tab";
 import GoogleLogin from "./components/google-login";
 
-export default async function LoginPage() {
+type LoginPageProps = {
+  searchParams: Promise<{ redirectTo?: string | string[] }>;
+};
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const sp = await searchParams;
+  const redirectToRaw = sp?.redirectTo;
+  const redirectTo = Array.isArray(redirectToRaw) ? redirectToRaw[0] ?? "/" : redirectToRaw ?? "/";
+
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-md flex-col gap-6">
         <Card className="w-full">
           <LoginHeader />
           <CardContent>
-            <AuthsTab />
+            <AuthsTab redirectTo={redirectTo} />
 
             <div className="relative my-6">
               <Separator />
