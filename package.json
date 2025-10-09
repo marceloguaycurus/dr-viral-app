@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "prisma": {
+    "schema": "prisma/schemas/main.prisma",
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
