@@ -1,6 +1,7 @@
-import { MembersTable, Member } from "@/app/(app)/(admin)/members/components/members-table";
+import { MembersTable } from "@/app/(app)/(admin)/members/components/members-table";
 import { AddMemberDialog } from "@/app/(app)/(admin)/members/components/add-member-dialog";
 import { getMembers } from "@/lib/utils/dataFunctions/bd-management";
+import type { Member } from "@/lib/types/UserTypes";
 
 export default async function MembersPage() {
   const members: Member[] = await getMembers();

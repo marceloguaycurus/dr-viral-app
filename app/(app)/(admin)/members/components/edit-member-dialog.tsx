@@ -6,24 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { updateMember } from "@/app/(app)/(admin)/members/actions";
-import type { Member } from "@/app/(app)/(admin)/members/components/members-table";
+import type { Member } from "@/lib/types/UserTypes";
 
 const formSchema = z.object({
   id: z.string(),
@@ -42,12 +29,7 @@ interface EditMemberDialogProps {
   onMemberUpdated: (member: Member) => void;
 }
 
-export function EditMemberDialog({
-  member,
-  open,
-  onOpenChange,
-  onMemberUpdated,
-}: EditMemberDialogProps) {
+export function EditMemberDialog({ member, open, onOpenChange, onMemberUpdated }: EditMemberDialogProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
