@@ -1,0 +1,49 @@
+---
+alwaysApply: true
+---
+
+This rule provides the global definitions of the project:
+
+- Project Scope: This project is a nextjs boilerplate
+- Project Stack:
+  Next.js 15 (app-router, turbopack)
+  React 19 + TypeScript 5
+  Style: Tailwind CSS 4 (PostCSS pipeline)
+  ORM: Prisma 6
+  Auth + Postgres DB: Supabase
+  State: Zustand 4
+  Forms & validation: Zod 3
+  Icons: Lucide-React
+- Project Folder Structure:
+  app/ – Next.js routes (App Router) with route groups (app), (auth), (admin)
+  ├─ (app)/ … – main signed-in area (pages, layouts, actions)
+  │ └─ (admin) - admin features area
+  └─ (auth)/ … – auth pages (login, confirm)
+  components/ – UI layers
+  ├─ core/ – customized shadcn components (button, card, input …) - always prefer to use this
+  ├─ shared/ – app-level widgets (navbar, toast, modal …)
+  └─ ui/ – original shadcn components (Radix wrappers)
+  hooks/ – custom React hooks (use-mobile, use-user-clinics)
+  lib/ – non-React helpers
+  ├─ constants/ – static values
+  ├─ types/ – shared TypeScript types
+  └─ utils/ – business / API helpers (Prisma, Supabase, cookies, RBAC)
+  prisma/ – Prisma schemas, migrations, seed script
+  public/ – static assets (images)
+  stores/ – Zustand stores (toast)
+  documentation/ – implementation guides
+
+Use the following code preferences when implementing anything:
+
+- Avoid large code blocks; create the smallest possible components.
+- Avoid marking page.tsx with 'use client' whenever possible. If any browser or state interactive is necessary, make it a separate component.
+- Always prefer to use <Link> and <Image> from next.js
+- If a const is derived from another one, don’t use useState, use a simple const with the calculation.
+- Always use controlled inputs with handleChange and useState. Use zod to validate those inputs
+- Use zustand when global state is needed (avoid React Context API).
+- Always use type aliases; never interfaces;
+- Add the ? optional modifier only when a value can genuinely be undefined.
+- When implementing anything, always look at the '@/documents' folder to see if there is any implementation example first.
+- Never create new base components (button, toast, etc.) without checking @/components/core first. If not, look at @/components/ui folder. If doesn’t exist in either, ask me how to proceed.
+- Do not include any of the following styles to any UI component you are implementing, unless explicitly asked for: color, background-color, font-size, text-color, font.
+- When making code changes, if you get rid of any part of the code, always clean unused imports and variables
