@@ -1,4 +1,4 @@
 export { ToastProvider } from "./provider";
 export { RouterToastListener } from "./router-listener";
-export { useToast } from "@/store/toast-store";
+export { useToast } from "@/stores/toast-store";
 export { toastMessages } from "./messages";

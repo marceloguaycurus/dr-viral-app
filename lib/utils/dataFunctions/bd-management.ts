@@ -2,7 +2,7 @@
 
 import type { UserData } from "@/lib/types/UserTypes";
 import { getClinicServer } from "@/lib/utils/selected-clinic-cookie";
-import type { Member } from "@/app/(app)/(admin)/membros/components/members-table";
+import type { Member } from "@/app/(app)/(admin)/members/components/members-table";
 import { createClient } from "@/lib/utils/supabase/server";
 
 export async function getAgentConfig(clinicId: string) {
@@ -15,10 +15,7 @@ export async function getAgentConfig(clinicId: string) {
     .eq("clinic_id", clinicId)
     .single();
   if (error) throw error;
-  if (!data)
-    throw new Error(
-      "Configuração da agente não encontrada para a clínica informada."
-    );
+  if (!data) throw new Error("Configuração da agente não encontrada para a clínica informada.");
   return {
     displayName: data.display_name,
     avatarPreview: data.avatar_url,
@@ -39,9 +36,7 @@ export async function getClinicInfo(clinicId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("config_clinics")
-    .select(
-      "clinic_name, clinic_address, clinic_landline_phone, clinic_mobile_phone, clinic_email, clinic_website, business_hours"
-    )
+    .select("clinic_name, clinic_address, clinic_landline_phone, clinic_mobile_phone, clinic_email, clinic_website, business_hours")
     .eq("clinic_id", clinicId)
     .single();
 
@@ -70,9 +65,7 @@ export async function getHumanTransferConfig(clinicId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("config_human_transfer")
-    .select(
-      "trigger_words, escalation_message, notify_by_email, notify_by_whatsapp, business_hours_only"
-    )
+    .select("trigger_words, escalation_message, notify_by_email, notify_by_whatsapp, business_hours_only")
     .eq("clinic_id", clinicId)
     .single();
 
@@ -146,9 +139,7 @@ export async function getScheduleRules(clinicId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("config_schedule_rules")
-    .select(
-      "min_window_hours, min_window_unit, cancel_deadline_hours, cancel_deadline_unit, max_reschedulings"
-    )
+    .select("min_window_hours, min_window_unit, cancel_deadline_hours, cancel_deadline_unit, max_reschedulings")
     .eq("clinic_id", clinicId)
     .single();
 
@@ -183,11 +174,9 @@ export async function getUserData(): Promise<UserData | null> {
   if (!user) return null;
 
   return {
-    name: user.user_metadata?.full_name ?? user.email?.split("@")[0] ?? "User",
+    fullName: user.user_metadata?.full_name ?? user.email?.split("@")[0] ?? "User",
     email: user.email ?? "",
-    avatar:
-      user.user_metadata?.avatar_url ??
-      `https://ui-avatars.com/api/?name=${user.email}`,
+    avatar: user.user_metadata?.avatar_url ?? `https://ui-avatars.com/api/?name=${user.email}`,
   };
 }
 
@@ -197,10 +186,7 @@ export async function getMembers(): Promise<Member[]> {
   const clinic = await getClinicServer(cookieStore);
   if (!clinic?.id) return [];
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("membros_clinica")
-    .select("user_id, email, role, created_at")
-    .eq("clinic_id", clinic.id);
+  const { data, error } = await supabase.from("membros_clinica").select("user_id, email, role, created_at").eq("clinic_id", clinic.id);
   if (error) throw error;
   return (data || []).map((item: any) => ({
     id: item.user_id,

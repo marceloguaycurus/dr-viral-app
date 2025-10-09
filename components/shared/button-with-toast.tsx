@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/core/button";
 import { useToast } from "@/components/shared/toast";
-import { ToastKind } from "@/store/toast-store";
+import { ToastKind } from "@/stores/toast-store";
 
 export default function ButtonWithToast({
   kind,

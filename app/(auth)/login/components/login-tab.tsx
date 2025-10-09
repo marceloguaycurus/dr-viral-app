@@ -17,8 +17,7 @@ type LoginTabProps = {
 };
 
 // Define fallback SITE_URL just like server actions
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? (typeof window !== "undefined" ? window.location.origin : "");
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? (typeof window !== "undefined" ? window.location.origin : "");
 
 // Function to request password reset link
 async function requestPasswordReset(email: string) {
@@ -94,12 +93,7 @@ export default function LoginTab({ formValues, setFormValues }: LoginTabProps) {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="password">Senha</Label>
-            <Button
-              variant="link"
-              className="p-0 h-auto text-xs"
-              type="button"
-              onClick={handleForgotPassword}
-            >
+            <Button variant="link" className="p-0 h-auto text-xs" type="button" onClick={handleForgotPassword}>
               Esqueceu sua senha?
             </Button>
           </div>

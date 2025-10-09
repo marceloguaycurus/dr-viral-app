@@ -26,8 +26,7 @@ export default async function LoginPage() {
           </CardContent>
         </Card>
         <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-          Ao continuar, você concorda com nossos <a href="#">Termos de Serviço</a> e{" "}
-          <a href="#">Política de Privacidade</a>.
+          Ao continuar, você concorda com nossos <a href="#">Termos de Serviço</a> e <a href="#">Política de Privacidade</a>.
         </div>
       </div>
     </div>
