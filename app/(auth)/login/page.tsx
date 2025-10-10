@@ -34,7 +34,15 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </CardContent>
         </Card>
         <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-          Ao continuar, você concorda com nossos <a href="#">Termos de Serviço</a> e <a href="#">Política de Privacidade</a>.
+          Ao continuar, você concorda com nossos{" "}
+          <a href="https://www.drviral.com.br/terms" target="_blank">
+            Termos de Serviço
+          </a>{" "}
+          e{" "}
+          <a href="https://www.drviral.com.br/privacy" target="_blank">
+            Política de Privacidade
+          </a>
+          .
         </div>
       </div>
     </div>
