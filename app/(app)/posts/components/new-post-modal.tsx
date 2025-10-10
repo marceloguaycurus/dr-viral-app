@@ -1,29 +1,29 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { X, Sparkles } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useState } from "react";
+import { X, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface NewPostModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onGenerate: () => void
+  isOpen: boolean;
+  onClose: () => void;
+  onGenerate: () => void;
 }
 
 export function NewPostModal({ isOpen, onClose, onGenerate }: NewPostModalProps) {
-  const [category, setCategory] = useState<string>("")
-  const [description, setDescription] = useState<string>("")
-  const [autoGenerateCaption, setAutoGenerateCaption] = useState<boolean>(true)
+  const [category, setCategory] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [autoGenerateCaption, setAutoGenerateCaption] = useState<boolean>(true);
 
   const handleGenerate = () => {
-    onGenerate()
-  }
+    onGenerate();
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <>
@@ -96,5 +96,5 @@ export function NewPostModal({ isOpen, onClose, onGenerate }: NewPostModalProps)
         </div>
       </div>
     </>
-  )
+  );
 }

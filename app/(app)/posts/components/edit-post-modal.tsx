@@ -1,17 +1,18 @@
-"use client"
-import { X, Download, Edit, MoreVertical, RefreshCw, Send } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+"use client";
+import { X, Download, Edit, MoreVertical, RefreshCw, Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 
 interface EditPostModalProps {
-  isOpen: boolean
-  isLoading: boolean
-  onClose: () => void
+  isOpen: boolean;
+  isLoading: boolean;
+  onClose: () => void;
 }
 
 export function EditPostModal({ isOpen, isLoading, onClose }: EditPostModalProps) {
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <>
@@ -25,7 +26,7 @@ export function EditPostModal({ isOpen, isLoading, onClose }: EditPostModalProps
         </div>
       </div>
     </>
-  )
+  );
 }
 
 function LoadingSkeleton() {
@@ -48,7 +49,7 @@ function LoadingSkeleton() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function PostPreview({ onClose }: { onClose: () => void }) {
@@ -56,22 +57,21 @@ function PostPreview({ onClose }: { onClose: () => void }) {
 
 Estamos super animados em compartilhar com vocês essa novidade que vai transformar a sua experiência. Fique ligado para mais detalhes em breve!
 
-#novidade #embreve #transformacao #inovacao #tecnologia`
+#novidade #embreve #transformacao #inovacao #tecnologia`;
 
   return (
     <div className="flex flex-col md:flex-row h-full">
       {/* Image Section - top on mobile, left on desktop */}
       <div className="relative w-full md:w-1/2 aspect-square md:aspect-auto bg-muted">
-        <img
+        <Image
           src="/social-media-post.png"
           alt="Post preview"
           className="w-full h-full object-cover md:rounded-l-lg"
+          width={500}
+          height={500}
         />
         {/* Post type badge on image */}
-        <Badge
-          variant="secondary"
-          className="absolute top-3 right-3 bg-black/50 text-white border-none backdrop-blur-sm"
-        >
+        <Badge variant="secondary" className="absolute top-3 right-3 bg-black/50 text-white border-none backdrop-blur-sm">
           Reels
         </Badge>
       </div>
@@ -122,5 +122,5 @@ Estamos super animados em compartilhar com vocês essa novidade que vai transfor
         </div>
       </div>
     </div>
-  )
+  );
 }

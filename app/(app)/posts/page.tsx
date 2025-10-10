@@ -48,10 +48,10 @@ export default function Page() {
   };
 
   return (
-    <main className="min-h-screen bg-background">
+    <>
       <PostFeedHeader activeTab={activeTab} onTabChange={setActiveTab} onNewPost={() => setIsNewPostModalOpen(true)} />
 
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto sm:px-12 px-4 py-6">
         {currentPosts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {currentPosts.map((post) => (
@@ -66,6 +66,6 @@ export default function Page() {
       <NewPostModal isOpen={isNewPostModalOpen} onClose={() => setIsNewPostModalOpen(false)} onGenerate={handleGenerate} />
 
       <EditPostModal isOpen={isEditModalOpen} isLoading={isGenerating} onClose={handleCloseEditModal} />
-    </main>
+    </>
   );
 }

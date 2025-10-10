@@ -4,19 +4,10 @@ import { SidebarLogo } from "@/components/shared/navbar/sidebar-logo";
 import { TeamSwitcher } from "@/components/shared/navbar/team-switcher";
 import { NavUser } from "@/components/shared/navbar/nav-user";
 import { UserData } from "@/lib/types/UserTypes";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarSeparator,
-} from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarSeparator } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 
-export async function AppSidebar({
-  userData,
-  ...props
-}: React.ComponentProps<typeof Sidebar> & { userData: UserData | null }) {
+export async function AppSidebar({ userData, ...props }: React.ComponentProps<typeof Sidebar> & { userData: UserData | null }) {
   const c = await cookies();
   const clinic = await getClinicServer(c);
   const allowed = clinic && ["owner", "admin"].includes(clinic.role ?? "");
@@ -28,7 +19,7 @@ export async function AppSidebar({
   }
 
   return (
-    <Sidebar collapsible="icon" variant="inset" {...props}>
+    <Sidebar variant="sidebar" {...props}>
       <SidebarHeader>
         <SidebarLogo />
         <SidebarSeparator />
