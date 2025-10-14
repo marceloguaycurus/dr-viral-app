@@ -1,10 +1,11 @@
-import { FileText, Calendar, CheckCircle2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { FileText, Calendar, CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 
-type TabOption = "gerados" | "agendados" | "publicados"
+type TabOption = "gerados" | "agendados" | "publicados";
 
 interface EmptyStateProps {
-  tab: TabOption
+  tab: TabOption;
 }
 
 const emptyStateConfig = {
@@ -23,20 +24,26 @@ const emptyStateConfig = {
     title: "Nenhum post publicado",
     description: "Você ainda não publicou nenhum post. Seus posts publicados aparecerão aqui.",
   },
-}
+};
 
 export function EmptyState({ tab }: EmptyStateProps) {
-  const config = emptyStateConfig[tab]
-  const Icon = config.icon
+  const config = emptyStateConfig[tab];
+  const Icon = config.icon;
 
   return (
-    <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-      <div className="rounded-full bg-muted p-6 mb-4">
-        <Icon className="h-12 w-12 text-muted-foreground" />
-      </div>
-      <h3 className="text-xl font-semibold mb-2">{config.title}</h3>
-      <p className="text-muted-foreground max-w-md mb-6">{config.description}</p>
-      {tab === "gerados" && <Button>Criar Primeiro Post</Button>}
-    </div>
-  )
+    <Empty>
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <Icon />
+        </EmptyMedia>
+        <EmptyTitle>{config.title}</EmptyTitle>
+        <EmptyDescription>{config.description}</EmptyDescription>
+      </EmptyHeader>
+      {tab === "gerados" && (
+        <EmptyContent>
+          <Button>Criar Primeiro Post</Button>
+        </EmptyContent>
+      )}
+    </Empty>
+  );
 }

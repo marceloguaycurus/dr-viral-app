@@ -11,12 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { useClinic } from "@/context/clinic-context";
 import { useUserClinics } from "@/hooks/use-user-clinics";
 import { Button } from "@/components/ui/button";
@@ -65,12 +60,7 @@ export function TeamSwitcher() {
               <span className="truncate font-medium">Erro ao carregar</span>
               <span className="truncate text-xs">Tente atualizar</span>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleRefresh}
-              className="ml-auto p-1 h-auto"
-            >
+            <Button variant="ghost" size="sm" onClick={handleRefresh} className="ml-auto p-1 h-auto">
               <RefreshCw className="size-4" />
             </Button>
           </SidebarMenuButton>
@@ -108,22 +98,15 @@ export function TeamSwitcher() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-            >
+            <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
               <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                 <Building2 className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">
-                  {current?.nome || "Selecione uma clínica"}
-                </span>
-                <span className="truncate text-xs">
-                  {current?.role || "Nenhuma clínica selecionada"}
-                </span>
+                <span className="truncate font-medium">{current?.nome || "Selecione uma clínica"}</span>
+                <span className="truncate text-xs">{current?.role || "Nenhuma clínica selecionada"}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -151,9 +134,7 @@ export function TeamSwitcher() {
                   <Building2 className="size-3.5 shrink-0" />
                 </div>
                 <span className="flex-1 truncate">{clinic.nome}</span>
-                {clinic.role === "owner" && (
-                  <ShieldCheck className="size-3.5 text-primary shrink-0" />
-                )}
+                {clinic.role === "owner" && <ShieldCheck className="size-3.5 text-primary shrink-0" />}
 
                 {current?.id !== clinic.id}
               </DropdownMenuItem>
@@ -164,10 +145,7 @@ export function TeamSwitcher() {
               </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="gap-2 p-2"
-              onClick={() => alert("Funcionalidade 'Nova Clínica' não implementada.")}
-            >
+            <DropdownMenuItem className="gap-2 p-2" onClick={() => alert("Funcionalidade 'Nova Clínica' não implementada.")}>
               <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                 <Plus className="size-4" />
               </div>

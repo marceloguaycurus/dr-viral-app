@@ -47,7 +47,7 @@ export function PostFeedHeader({ activeTab, onTabChange, onNewPost }: PostFeedHe
                 <Plus className="h-4 w-4 mr-2" />
                 Novo Post
               </Button>
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="flex items-center gap-2">
                     <Filter className="h-4 w-4 " />

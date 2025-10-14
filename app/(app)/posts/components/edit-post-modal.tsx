@@ -1,37 +1,35 @@
 "use client";
-import { X, Download, Edit, MoreVertical, RefreshCw, Send } from "lucide-react";
+import { Download, Edit, MoreVertical, RefreshCw, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import Image from "next/image";
 
-interface EditPostModalProps {
+type EditPostModalProps = {
   isOpen: boolean;
   isLoading: boolean;
   onClose: () => void;
-}
+  trigger?: React.ReactNode;
+};
 
-export function EditPostModal({ isOpen, isLoading, onClose }: EditPostModalProps) {
-  if (!isOpen) return null;
-
+export function EditPostModal({ isOpen, isLoading, onClose, trigger }: EditPostModalProps) {
   return (
-    <>
-      {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
-
-      {/* Modal - Full screen on mobile, centered modal on desktop */}
-      <div className="fixed inset-0 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-4xl z-50">
-        <div className="bg-background h-full md:h-[600px] md:rounded-lg shadow-lg flex flex-col">
-          {isLoading ? <LoadingSkeleton /> : <PostPreview onClose={onClose} />}
-        </div>
-      </div>
-    </>
+    <Dialog open={isOpen} modal={false} onOpenChange={(open) => !open && onClose()}>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
+      <DialogContent className="max-w-screen h-screen sm:max-w-4xl sm:max-h-[600px] p-0">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Editar Post</DialogTitle>
+        </DialogHeader>
+        {isLoading ? <LoadingSkeleton /> : <PostPreview />}
+      </DialogContent>
+    </Dialog>
   );
 }
 
 function LoadingSkeleton() {
   return (
-    <div className="flex flex-col md:flex-row h-full p-6 gap-6">
+    <div className="flex flex-col md:flex-row h-[500px] p-6 gap-6">
       {/* Image skeleton - top on mobile, left on desktop */}
       <div className="w-full md:w-1/2 aspect-square md:aspect-auto bg-muted animate-pulse rounded-lg" />
 
@@ -52,7 +50,7 @@ function LoadingSkeleton() {
   );
 }
 
-function PostPreview({ onClose }: { onClose: () => void }) {
+function PostPreview() {
   const mockCaption = `🎉 Novidade incrível chegando! 
 
 Estamos super animados em compartilhar com vocês essa novidade que vai transformar a sua experiência. Fique ligado para mais detalhes em breve!
@@ -60,7 +58,7 @@ Estamos super animados em compartilhar com vocês essa novidade que vai transfor
 #novidade #embreve #transformacao #inovacao #tecnologia`;
 
   return (
-    <div className="flex flex-col md:flex-row h-full">
+    <div className="flex flex-col md:flex-row h-[500px]">
       {/* Image Section - top on mobile, left on desktop */}
       <div className="relative w-full md:w-1/2 aspect-square md:aspect-auto bg-muted">
         <Image
@@ -71,7 +69,7 @@ Estamos super animados em compartilhar com vocês essa novidade que vai transfor
           height={500}
         />
         {/* Post type badge on image */}
-        <Badge variant="secondary" className="absolute top-3 right-3 bg-black/50 text-white border-none backdrop-blur-sm">
+        <Badge variant="secondary" className="absolute top-3 left-3 bg-black/50 text-white border-none backdrop-blur-sm">
           Reels
         </Badge>
       </div>
@@ -83,9 +81,6 @@ Estamos super animados em compartilhar com vocês essa novidade que vai transfor
           <Badge variant="default" className="bg-blue-500">
             Gerado
           </Badge>
-          <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8 -mr-2">
-            <X className="h-4 w-4" />
-          </Button>
         </div>
 
         {/* Caption - scrollable */}
@@ -106,7 +101,7 @@ Estamos super animados em compartilhar com vocês essa novidade que vai transfor
           <Button variant="outline" size="icon">
             <Download className="h-4 w-4" />
           </Button>
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">
                 <MoreVertical className="h-4 w-4" />

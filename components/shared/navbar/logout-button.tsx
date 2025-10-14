@@ -17,11 +17,11 @@ export function LogoutButton() {
   }
 
   return (
-    <DropdownMenuItem asChild>
-      <button onClick={handleClick} className="flex w-full items-center gap-2">
+    <DropdownMenuItem asChild variant="destructive">
+      <a href="#" onClick={handleClick} className="flex w-full items-center gap-2">
         <LogOut className="size-4" />
         Sair
-      </button>
+      </a>
     </DropdownMenuItem>
   );
 }

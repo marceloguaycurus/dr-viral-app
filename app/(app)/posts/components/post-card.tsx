@@ -67,7 +67,7 @@ export function PostCard() {
               <Calendar className="mr-2 h-4 w-4" />
               Agendar
             </Button>
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button size="sm" className="rounded-l-none border-l px-2">
                   <ChevronDown className="h-4 w-4" />

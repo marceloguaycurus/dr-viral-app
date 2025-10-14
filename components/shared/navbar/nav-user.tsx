@@ -1,6 +1,6 @@
 "use client";
 
-import { EllipsisVertical, CreditCard, Settings, Sparkles, User } from "lucide-react";
+import { EllipsisVertical, CreditCard, Settings, Sparkles, CircleUser } from "lucide-react";
 import { LogoutButton } from "./logout-button";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,7 +25,7 @@ export function NavUser({ user }: Props) {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
@@ -70,8 +70,10 @@ export function NavUser({ user }: Props) {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <User />
-                Profile
+                <a href="/account" className="flex w-full items-center gap-2">
+                  <CircleUser />
+                  Conta
+                </a>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Settings />

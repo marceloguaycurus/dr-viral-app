@@ -1,38 +1,22 @@
-import {
-  Home,
-  ScrollText,
-  MessageSquare,
-  Settings,
-  Users,
-  Code,
-  Send,
-  Bot,
-  Calendar,
-} from "lucide-react";
+import { Users, Code, Send, Bot, Calendar, Instagram, SlidersHorizontal } from "lucide-react";
 
 export const navigationItems = [
   {
-    title: "Início",
+    title: "Posts",
     href: "/",
-    icon: Home,
+    icon: Instagram,
     menuSection: "Geral",
   },
   {
-    title: "Conversas",
-    href: "/conversas",
-    icon: MessageSquare,
+    title: "Calendário",
+    href: "/calendar",
+    icon: Calendar,
     menuSection: "Geral",
   },
   {
     title: "Preferências",
-    href: "/preferencias",
-    icon: Settings,
-    menuSection: "Geral",
-  },
-  {
-    title: "Logs",
-    href: "/logs",
-    icon: ScrollText,
+    href: "/preferences",
+    icon: SlidersHorizontal,
     menuSection: "Geral",
   },
   {
