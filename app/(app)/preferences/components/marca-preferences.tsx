@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, X } from "lucide-react";
+import Image from "next/image";
 
 export function MarcaPreferences() {
   const [brandSettings, setBrandSettings] = useState({
@@ -85,7 +86,13 @@ export function MarcaPreferences() {
               <div className="relative w-24 h-24 bg-gray-100 rounded-2xl flex items-center justify-center border-2 border-dashed border-gray-300">
                 {brandSettings.logo ? (
                   <>
-                    <img src={URL.createObjectURL(brandSettings.logo)} alt="Logo" className="w-full h-full object-contain rounded-2xl" />
+                    <Image
+                      src={URL.createObjectURL(brandSettings.logo)}
+                      alt="Logo"
+                      className="w-full h-full object-contain rounded-2xl"
+                      width={96}
+                      height={96}
+                    />
                     {isEditMode && (
                       <button
                         onClick={deleteLogo}

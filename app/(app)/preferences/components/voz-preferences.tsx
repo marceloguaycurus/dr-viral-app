@@ -56,19 +56,19 @@ export function VozPreferences() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Voice</CardTitle>
-          <CardDescription>Your brand's voice defines your unique writing style and personality.</CardDescription>
+          <CardTitle>Voz da Marca</CardTitle>
+          <CardDescription>A voz da sua marca define o seu estilo de escrita e personalidade.</CardDescription>
           <CardAction>
             <Button variant="outline" size="sm" onClick={() => setIsEditing(!isEditing)} className="flex items-center gap-2">
               <Edit className="h-4 w-4" />
-              {isEditing ? "Save" : "Edit"}
+              {isEditing ? "Salvar" : "Editar"}
             </Button>
           </CardAction>
         </CardHeader>
         <CardContent className="space-y-8">
           {/* Voice Description */}
           <div>
-            <Label className="text-sm font-medium">Voice</Label>
+            <Label className="text-sm font-medium">Voz</Label>
             {isEditing ? (
               <Textarea
                 name="voiceDescription"
