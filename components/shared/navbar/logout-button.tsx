@@ -4,14 +4,12 @@ import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { logout } from "@/app/(app)/logout/actions";
-import { setClinicClient } from "@/lib/utils/selected-clinic-cookie";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
 export function LogoutButton() {
   const router = useRouter();
 
   async function handleClick() {
-    setClinicClient(null);
     await logout();
     router.replace("/login");
   }

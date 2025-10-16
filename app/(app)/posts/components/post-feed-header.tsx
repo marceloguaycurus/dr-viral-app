@@ -13,10 +13,10 @@ interface PostFeedHeaderProps {
 }
 
 export function PostFeedHeader({ activeTab, onTabChange, onNewPost }: PostFeedHeaderProps) {
-  const tabs: { value: TabOption; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-    { value: "gerados", label: "Gerados", icon: Zap },
-    { value: "agendados", label: "Agendados", icon: Calendar },
-    { value: "publicados", label: "Publicados", icon: Send },
+  const tabs: { value: TabOption; label: string; icon: React.ComponentType<{ className?: string }>; items: number }[] = [
+    { value: "gerados", label: "Gerados", icon: Zap, items: 5 },
+    { value: "agendados", label: "Agendados", icon: Calendar, items: 2 },
+    { value: "publicados", label: "Publicados", icon: Send, items: 0 },
   ];
 
   return (
@@ -35,7 +35,7 @@ export function PostFeedHeader({ activeTab, onTabChange, onNewPost }: PostFeedHe
                 }`}
               >
                 <tab.icon className="h-4 w-4" />
-                {tab.label}
+                {tab.label + " (" + tab.items + ")"}
               </button>
             ))}
           </nav>

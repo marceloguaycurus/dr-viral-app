@@ -1,28 +1,24 @@
-// lib/auth/require-role.ts
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { createClient } from "@/lib/utils/supabase/server";
-import { getClinicServer } from "@/lib/utils/selected-clinic-cookie";
+import prisma from "./prisma";
+import { getSelectedCompanyId } from "@/lib/utils/company-cookie-actions";
+import { getUserData } from "@/lib/utils/dataFunctions/bd-management";
 
-export async function requireRole(allowed: ("owner" | "admin")[]) {
-  // 1. clínica atual vinda do cookie
-  const cookieStore = await cookies();
-  const clinic = await getClinicServer(cookieStore);
+export async function requireRole() {
+  const companyId = await getSelectedCompanyId();
+  const userData = await getUserData();
 
-  // 2. (Opcional) confirma o papel no banco para evitar cookie forjado
-  if (clinic?.id) {
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from("v_user_clinic_roles")
-      .select("role")
-      .eq("clinic_id", clinic.id)
-      .maybeSingle();
-
-    clinic.role = data?.role ?? clinic.role;
+  if (companyId) {
+    const company = await prisma.organizationMember.findUnique({
+      where: {
+        orgId_userId: {
+          orgId: companyId,
+          userId: userData?.userId ?? "",
+        },
+      },
+    });
+    if (!company || !company.role.includes("owner") || !company.role.includes("admin")) {
+      notFound();
+    }
+    return company;
   }
-
-  if (!clinic || !allowed.includes(clinic.role as "owner" | "admin")) {
-    notFound();
-  }
-  return clinic;
 }

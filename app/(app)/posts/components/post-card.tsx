@@ -22,10 +22,10 @@ export function PostCard() {
       <CardContent className="p-0">
         <div className="flex items-center justify-between p-3 border-b">
           <Badge variant="secondary" className="bg-blue-100 text-blue-700 hover:bg-blue-100">
-            Gerado
+            Categoria
           </Badge>
 
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-8 w-8">
                 <MoreVertical className="h-4 w-4" />
@@ -40,7 +40,7 @@ export function PostCard() {
                 <Copy className="mr-2 h-4 w-4" />
                 Duplicar
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-destructive">
+              <DropdownMenuItem variant="destructive">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Excluir
               </DropdownMenuItem>
@@ -55,7 +55,7 @@ export function PostCard() {
         <div className="p-3">
           <p className={`text-sm text-foreground ${!isExpanded && needsTruncation ? "line-clamp-3" : ""}`}>{caption}</p>
           {needsTruncation && (
-            <button onClick={() => setIsExpanded(!isExpanded)} className="text-sm text-muted-foreground hover:text-foreground mt-1">
+            <button onClick={() => setIsExpanded(!isExpanded)} className="text-sm text-blue-700 hover:text-blue-700 mt-1">
               {isExpanded ? "mostrar menos" : "mais"}
             </button>
           )}

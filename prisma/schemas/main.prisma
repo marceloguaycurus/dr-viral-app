@@ -7,3 +7,164 @@ datasource db {
     url       = env("DATABASE_URL")
     directUrl = env("DIRECT_URL")
 }
+
+// ===== Enums =====
+
+enum Role {
+    owner
+    admin
+    editor
+    viewer
+}
+
+enum PostStatus {
+    generated
+    scheduled
+    published
+}
+
+enum PostType {
+    post
+    carousel
+    story
+    reel
+}
+
+// ===== Core Models =====
+
+model Organization {
+    id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    instaHandle String
+    name        String
+    timezone    String    @default("America/Sao_Paulo")
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime? @updatedAt
+
+    // Attribution
+    createdBy String @db.Uuid
+
+    // Relations
+    members               OrganizationMember[]
+    categories            Category[]
+    posts                 Post[]
+    scheduleSlotTemplates ScheduleSlotTemplate[]
+
+    @@map("organizations")
+}
+
+model OrganizationMember {
+    orgId     String    @db.Uuid
+    userId    String    @db.Uuid
+    role      Role      @default(editor)
+    isActive  Boolean   @default(true)
+    createdAt DateTime  @default(now())
+    updatedAt DateTime? @updatedAt
+
+    // Relations
+    organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+    @@id([orgId, userId])
+    @@map("organization_members")
+}
+
+model Category {
+    id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    orgId     String   @db.Uuid
+    name      String
+    colorHex  String?
+    isActive  Boolean  @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relations
+    organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+    posts        Post[]
+
+    @@unique([orgId, name])
+    @@map("categories")
+}
+
+model Post {
+    id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    orgId     String @db.Uuid
+    createdBy String @db.Uuid
+
+    // Content
+    type             PostType
+    aspectRatio      String?
+    pagesCount       Int      @default(1)
+    categoryId       String?  @db.Uuid
+    description      String?
+    caption          String?
+    captionGenerated Boolean  @default(false)
+
+    // Lifecycle
+    status      PostStatus @default(generated)
+    generatedAt DateTime   @default(now())
+    scheduledAt DateTime?
+    scheduledBy String?    @db.Uuid
+    publishedAt DateTime?
+    publishedBy String?    @db.Uuid
+    autoPublish Boolean    @default(false)
+
+    // Publishing metadata (external platform identifiers/links)
+    publishedPlatform    String?
+    publishedExternalId  String?
+    publishedExternalUrl String?
+
+    // Metadata and housekeeping
+    meta      Json?     @default(dbgenerated("'{}'::jsonb"))
+    deletedAt DateTime?
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+
+    // Relations
+    organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+    category     Category?    @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+    assets       PostAsset[]
+
+    // Indexes
+    @@unique([orgId, scheduledAt])
+    @@index([orgId, status])
+    @@index([orgId, scheduledAt])
+    @@index([orgId, publishedAt])
+    @@map("posts")
+}
+
+model PostAsset {
+    id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    postId      String    @db.Uuid
+    pageIndex   Int       @default(1)
+    storagePath String
+    mimeType    String?
+    width       Int?
+    height      Int?
+    sizeBytes   BigInt?
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    deletedAt   DateTime?
+
+    // Relations
+    post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+    @@unique([postId, pageIndex])
+    @@index([postId])
+    @@map("post_assets")
+}
+
+model ScheduleSlotTemplate {
+    id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    orgId     String   @db.Uuid
+    weekday   Int
+    // Stored as string in HH:mm format for portability; enforce in app layer
+    slotTime  String
+    active    Boolean  @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relations
+    organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+    @@unique([orgId, weekday, slotTime])
+    @@map("schedule_slot_templates")
+}

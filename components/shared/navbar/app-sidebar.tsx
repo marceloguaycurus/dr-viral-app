@@ -1,16 +1,18 @@
 import { NavMain } from "@/components/shared/navbar/nav-main";
-import { getClinicServer } from "@/lib/utils/selected-clinic-cookie";
+import { getSelectedCompanyId } from "@/lib/utils/company-cookie-actions";
 import { SidebarLogo } from "@/components/shared/navbar/sidebar-logo";
 import { TeamSwitcher } from "@/components/shared/navbar/team-switcher";
 import { NavUser } from "@/components/shared/navbar/nav-user";
 import { UserData } from "@/lib/types/UserTypes";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarSeparator } from "@/components/ui/sidebar";
-import { cookies } from "next/headers";
+import { getCompanies, getSelectedCompanyRole } from "@/lib/utils/dataFunctions/bd-management";
+import { Organization } from "@prisma/client";
 
-export async function AppSidebar({ userData, ...props }: React.ComponentProps<typeof Sidebar> & { userData: UserData | null }) {
-  const c = await cookies();
-  const clinic = await getClinicServer(c);
-  const allowed = clinic && ["owner", "admin"].includes(clinic.role ?? "");
+export async function AppSidebar({ userData, ...props }: React.ComponentProps<typeof Sidebar> & { userData: UserData }) {
+  const activeCompanyId = await getSelectedCompanyId();
+  const companies: Organization[] = await getCompanies(userData.userId);
+  const activeCompanyRole = await getSelectedCompanyRole(activeCompanyId ?? "", userData.userId);
+  const allowed = activeCompanyId && ["owner", "admin"].includes(activeCompanyRole ?? "");
 
   let AdminMenu = null;
   if (allowed) {
@@ -23,7 +25,7 @@ export async function AppSidebar({ userData, ...props }: React.ComponentProps<ty
       <SidebarHeader>
         <SidebarLogo />
         <SidebarSeparator />
-        <TeamSwitcher />
+        <TeamSwitcher companyList={companies} activeCompanyId={activeCompanyId} activeCompanyRole={activeCompanyRole} />
         <SidebarSeparator />
       </SidebarHeader>
       <SidebarContent>

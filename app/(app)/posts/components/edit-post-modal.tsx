@@ -92,7 +92,7 @@ Estamos super animados em compartilhar com vocês essa novidade que vai transfor
         <div className="flex flex-wrap gap-2">
           <Button className="flex-1 min-w-[120px]">
             <Send className="h-4 w-4 mr-2" />
-            Publicar
+            Agendar
           </Button>
           <Button variant="outline" className="flex-1 min-w-[120px] bg-transparent">
             <Edit className="h-4 w-4 mr-2" />

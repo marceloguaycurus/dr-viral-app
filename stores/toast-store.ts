@@ -20,7 +20,6 @@ export const useToastStore = create<ToastStore>(() => ({
   push: (payload: ToastPayload) => {
     const { kind = "info", code, override } = payload;
 
-    // Determine final message
     const message = override ?? (toastMessages as Record<string, string>)[code] ?? code;
 
     switch (kind) {

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang="pt-BR" suppressHydrationWarning className="light">
       <body className={`${geist.className} font-sans antialiased overflow-y-scroll`}>
         <ToastProvider>
           <RouterToastListener />

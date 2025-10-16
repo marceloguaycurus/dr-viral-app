@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { UserData } from "@/lib/types/UserTypes";
+import Link from "next/link";
 
 type Props = { user: UserData | null };
 
@@ -70,10 +71,10 @@ export function NavUser({ user }: Props) {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <a href="/account" className="flex w-full items-center gap-2">
+                <Link href="/account" className="flex w-full items-center gap-2">
                   <CircleUser />
                   Conta
-                </a>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Settings />

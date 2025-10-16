@@ -1,8 +1,9 @@
 "use server";
 
-import type { UserData, Member, MemberDbResponse } from "@/lib/types/UserTypes";
-import { getClinicServer } from "@/lib/utils/selected-clinic-cookie";
+import type { UserData } from "@/lib/types/UserTypes";
 import { createClient } from "@/lib/utils/supabase/server";
+import { Organization } from "@prisma/client";
+import prisma from "../prisma";
 
 export async function getAgentConfig(clinicId: string) {
   const supabase = await createClient();
@@ -153,24 +154,35 @@ export async function getUserData(): Promise<UserData | null> {
   if (!user) return null;
 
   return {
+    userId: user.id,
     fullName: user.user_metadata?.full_name ?? user.email?.split("@")[0] ?? "User",
     email: user.email ?? "",
     avatar: user.user_metadata?.avatar_url ?? `https://ui-avatars.com/api/?name=${user.email}`,
   };
 }
 
-export async function getMembers(): Promise<Member[]> {
-  const { cookies } = await import("next/headers");
-  const cookieStore = await cookies();
-  const clinic = await getClinicServer(cookieStore);
-  if (!clinic?.id) return [];
-  const supabase = await createClient();
-  const { data, error } = await supabase.from("membros_clinica").select("user_id, email, role, created_at").eq("clinic_id", clinic.id);
-  if (error) throw error;
-  return (data || []).map((item: MemberDbResponse) => ({
-    id: item.user_id,
-    email: item.email,
-    role: item.role as "owner" | "manager" | "member",
-    createdAt: new Date(item.created_at),
-  }));
+export async function getCompanies(userId: string): Promise<Organization[]> {
+  return prisma.organization.findMany({
+    where: {
+      members: {
+        some: { userId },
+      },
+    },
+  });
+}
+
+export async function getSelectedCompanyRole(companyId: string, userId: string): Promise<string | null> {
+  if (!companyId || !userId) return null;
+  const companyMember = await prisma.organizationMember.findUnique({
+    where: {
+      orgId_userId: {
+        orgId: companyId,
+        userId: userId,
+      },
+    },
+    select: { role: true },
+  });
+  if (!companyMember) return null;
+
+  return companyMember.role;
 }
