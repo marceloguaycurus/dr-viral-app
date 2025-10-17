@@ -2,12 +2,9 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/shared/navbar/app-sidebar";
 import { getUserData } from "@/lib/utils/dataFunctions/bd-management";
-import { notFound } from "next/navigation";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const userData = await getUserData();
-  if (!userData) return notFound();
-
   return (
     <SidebarProvider>
       <AppSidebar userData={userData} />

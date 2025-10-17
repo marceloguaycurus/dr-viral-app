@@ -3,16 +3,14 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Filter, Plus, Zap, Calendar, Send } from "lucide-react";
+import { usePostsStore } from "@/stores/posts-store";
 
 type TabOption = "gerados" | "agendados" | "publicados";
 
-interface PostFeedHeaderProps {
-  activeTab: TabOption;
-  onTabChange: (tab: TabOption) => void;
-  onNewPost?: () => void;
-}
-
-export function PostFeedHeader({ activeTab, onTabChange, onNewPost }: PostFeedHeaderProps) {
+export function PostFeedHeader() {
+  const activeTab = usePostsStore((s) => s.activeTab);
+  const setActiveTab = usePostsStore((s) => s.setActiveTab);
+  const openNewPostModal = usePostsStore((s) => s.openNewPostModal);
   const tabs: { value: TabOption; label: string; icon: React.ComponentType<{ className?: string }>; items: number }[] = [
     { value: "gerados", label: "Gerados", icon: Zap, items: 5 },
     { value: "agendados", label: "Agendados", icon: Calendar, items: 2 },
@@ -27,7 +25,7 @@ export function PostFeedHeader({ activeTab, onTabChange, onNewPost }: PostFeedHe
             {tabs.map((tab) => (
               <button
                 key={tab.value}
-                onClick={() => onTabChange(tab.value)}
+                onClick={() => setActiveTab(tab.value)}
                 className={`flex flex-col sm:flex-row items-center gap-2 px-4 py-2 w-full sm:w-auto text-sm font-medium rounded-md transition-colors ${
                   activeTab === tab.value
                     ? "bg-secondary text-secondary-foreground"
@@ -43,7 +41,7 @@ export function PostFeedHeader({ activeTab, onTabChange, onNewPost }: PostFeedHe
           <div className="ml-auto flex items-center gap-2 justify-between w-full sm:w-auto">
             <SidebarTrigger className="md:hidden" />
             <div className="flex items-center gap-2">
-              <Button size="sm" onClick={onNewPost}>
+              <Button size="sm" onClick={openNewPostModal}>
                 <Plus className="h-4 w-4 mr-2" />
                 Novo Post
               </Button>

@@ -2,145 +2,8 @@
 
 import type { UserData } from "@/lib/types/UserTypes";
 import { createClient } from "@/lib/utils/supabase/server";
-import { Organization } from "@prisma/client";
+import { Organization, OrganizationMember, Post } from "@prisma/client";
 import prisma from "../prisma";
-
-export async function getAgentConfig(clinicId: string) {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("config_agents")
-    .select(
-      "display_name, avatar_url, tone, scope_scheduling, scope_consultation, scope_reminder, scope_education, scope_prevention, scope_feedback"
-    )
-    .eq("clinic_id", clinicId)
-    .single();
-  if (error) throw error;
-  if (!data) throw new Error("Configuração da agente não encontrada para a clínica informada.");
-  return {
-    displayName: data.display_name,
-    avatarPreview: data.avatar_url,
-    tone: data.tone,
-    activeScopes: {
-      scheduling: !!data.scope_scheduling,
-      consultation: !!data.scope_consultation,
-      reminder: !!data.scope_reminder,
-      education: !!data.scope_education,
-      prevention: !!data.scope_prevention,
-      feedback: !!data.scope_feedback,
-    },
-  };
-}
-
-// Clinic Info
-export async function getClinicInfo(clinicId: string) {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("config_clinics")
-    .select("clinic_name, clinic_address, clinic_landline_phone, clinic_mobile_phone, clinic_email, clinic_website, business_hours")
-    .eq("clinic_id", clinicId)
-    .single();
-
-  if (error) {
-    // Não retornamos valores padrão, lançamos o erro para ser tratado no componente
-    throw error;
-  }
-
-  if (!data) {
-    throw new Error("Informações da clínica não encontradas.");
-  }
-
-  return {
-    clinicName: data.clinic_name || "",
-    address: data.clinic_address || "",
-    landlinePhone: data.clinic_landline_phone || "",
-    mobilePhone: data.clinic_mobile_phone || "",
-    email: data.clinic_email || "",
-    website: data.clinic_website || "",
-    businessHours: data.business_hours || null,
-  };
-}
-
-// Human Transfer
-export async function getHumanTransferConfig(clinicId: string) {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("config_human_transfer")
-    .select("trigger_words, escalation_message, notify_by_email, notify_by_whatsapp, business_hours_only")
-    .eq("clinic_id", clinicId)
-    .single();
-
-  if (error) {
-    // Não retornamos valores padrão, lançamos o erro para ser tratado no componente
-    throw error;
-  }
-
-  if (!data) {
-    throw new Error("Configurações de transferência não encontradas.");
-  }
-
-  return {
-    triggerWords: data.trigger_words,
-    escalationMessage: data.escalation_message,
-    notifyByEmail: data.notify_by_email,
-    notifyByWhatsapp: data.notify_by_whatsapp,
-    businessHoursOnly: data.business_hours_only,
-  };
-}
-
-// Integration
-export async function getIntegrationConfig(clinicId: string) {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("config_integrations")
-    .select("provider, api_key, endpoint_url, connection_status, last_sync")
-    .eq("clinic_id", clinicId)
-    .single();
-
-  if (error) {
-    // Não retornamos valores padrão, lançamos o erro para ser tratado no componente
-    throw error;
-  }
-
-  if (!data) {
-    throw new Error("Configurações de integração não encontradas.");
-  }
-
-  return {
-    provider: data.provider,
-    apiKey: data.api_key || "",
-    endpoint: data.endpoint_url || "",
-    connectionStatus: data.connection_status,
-    lastSync: data.last_sync,
-  };
-}
-
-// Schedule Rules
-export async function getScheduleRules(clinicId: string) {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("config_schedule_rules")
-    .select("min_window_hours, min_window_unit, cancel_deadline_hours, cancel_deadline_unit, max_reschedulings")
-    .eq("clinic_id", clinicId)
-    .single();
-
-  if (error) {
-    // Não retornamos valores padrão, lançamos o erro para ser tratado no componente
-    throw error;
-  }
-
-  if (!data) {
-    throw new Error("Regras de agendamento não encontradas.");
-  }
-
-  return {
-    minWindowHours: data.min_window_hours.toString(),
-    minWindowUnit: data.min_window_unit,
-    cancelDeadlineHours: data.cancel_deadline_hours.toString(),
-    cancelDeadlineUnit: data.cancel_deadline_unit,
-    maxReschedulingsValue: data.max_reschedulings,
-    allowOverbooking: false, // Esta coluna não existe na tabela
-  };
-}
 
 // Get User Data
 export async function getUserData(): Promise<UserData | null> {
@@ -158,7 +21,21 @@ export async function getUserData(): Promise<UserData | null> {
     fullName: user.user_metadata?.full_name ?? user.email?.split("@")[0] ?? "User",
     email: user.email ?? "",
     avatar: user.user_metadata?.avatar_url ?? `https://ui-avatars.com/api/?name=${user.email}`,
+    activeCompanyId: user.user_metadata?.active_company_id ?? null,
   };
+}
+
+export async function setActiveCompanyId(companyId: string): Promise<void> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const current = user?.user_metadata?.active_company_id ?? null;
+  if (current === companyId) return;
+  await supabase.auth.updateUser({
+    data: { active_company_id: companyId },
+  });
 }
 
 export async function getCompanies(userId: string): Promise<Organization[]> {
@@ -185,4 +62,62 @@ export async function getSelectedCompanyRole(companyId: string, userId: string):
   if (!companyMember) return null;
 
   return companyMember.role;
+}
+
+// Consolidated membership + organization fetch for sidebar
+export async function getMembershipsWithOrganizations(userId: string) {
+  return prisma.organizationMember.findMany({
+    where: { userId },
+    select: {
+      orgId: true,
+      role: true,
+      organization: true, // return full Organization shape for downstream consumers
+    },
+  });
+}
+
+// Posts
+export async function getPosts(companyId: string): Promise<Post[]> {
+  if (!companyId) return [];
+
+  return prisma.post.findMany({
+    where: {
+      orgId: companyId,
+      deletedAt: null,
+    },
+    orderBy: [{ scheduledAt: "desc" }, { createdAt: "desc" }],
+    include: {
+      category: true,
+      assets: {
+        orderBy: { pageIndex: "asc" },
+        take: 1,
+      },
+    },
+  });
+}
+
+export type CreatePostFormState = { success: boolean };
+
+export async function createPostFromForm(_prevState: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
+  const postType = String(formData.get("postType") ?? "");
+  const category = String(formData.get("category") ?? "");
+  const description = String(formData.get("description") ?? "");
+  const autoGenerateCaption = String(formData.get("autoGenerateCaption")) === "true";
+  const slides = Number(formData.get("slides") ?? 1);
+
+  // TODO: Implement DB creation using prisma with the correct schema mapping.
+  void postType;
+  void category;
+  void description;
+  void autoGenerateCaption;
+  void slides;
+  return { success: true };
+}
+
+export async function getMembers(companyId: string): Promise<OrganizationMember[]> {
+  return prisma.organizationMember.findMany({
+    where: {
+      orgId: companyId,
+    },
+  });
 }

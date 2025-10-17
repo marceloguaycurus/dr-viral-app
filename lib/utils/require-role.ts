@@ -1,11 +1,10 @@
 import { notFound } from "next/navigation";
 import prisma from "./prisma";
-import { getSelectedCompanyId } from "@/lib/utils/company-cookie-actions";
 import { getUserData } from "@/lib/utils/dataFunctions/bd-management";
 
 export async function requireRole() {
-  const companyId = await getSelectedCompanyId();
   const userData = await getUserData();
+  const companyId = userData?.activeCompanyId;
 
   if (companyId) {
     const company = await prisma.organizationMember.findUnique({

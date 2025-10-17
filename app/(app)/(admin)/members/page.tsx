@@ -1,17 +1,22 @@
-import { MembersTable } from "@/app/(app)/(admin)/members/components/members-table";
-import { AddMemberDialog } from "@/app/(app)/(admin)/members/components/add-member-dialog";
 import { getMembers } from "@/lib/utils/dataFunctions/bd-management";
-import type { Member } from "@/lib/types/UserTypes";
+import { getUserData } from "@/lib/utils/dataFunctions/bd-management";
+import { OrganizationMember } from "@prisma/client";
 
 export default async function MembersPage() {
-  const members: Member[] = await getMembers();
+  const userData = await getUserData();
+  const companyId = userData?.activeCompanyId;
+  if (!companyId) {
+    return <div>Nenhuma empresa selecionada</div>;
+  }
+  const members: OrganizationMember[] = await getMembers(companyId);
+  if (!members) {
+    return <div>Nenhum membro encontrado</div>;
+  }
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">Membros da clínica</h1>
-        <AddMemberDialog />
+        <h1 className="text-2xl font-semibold">Membros da Empresa</h1>
       </div>
-      <MembersTable members={members} />
     </div>
   );
 }

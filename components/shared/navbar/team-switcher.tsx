@@ -14,10 +14,8 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Organization } from "@prisma/client";
-import { useCompanyStore } from "@/stores/company-store";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { setSelectedCompanyId } from "@/lib/utils/company-cookie-actions";
+import { setActiveCompanyId } from "@/lib/utils/dataFunctions/bd-management";
 
 type TeamswitcherProps = {
   companyList: Organization[] | null;
@@ -27,23 +25,19 @@ type TeamswitcherProps = {
 
 export function TeamSwitcher({ companyList, activeCompanyId, activeCompanyRole }: TeamswitcherProps) {
   const { isMobile } = useSidebar();
+  const router = useRouter();
+  const [isPending, startTransition] = React.useTransition();
+
   const activeCompany = companyList?.find((company) => company.id === activeCompanyId);
 
-  const { selectedCompanyId, setSelectedCompany } = useCompanyStore();
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-
-  React.useEffect(() => {
-    if (activeCompanyId) {
-      setSelectedCompany(activeCompanyId);
-    }
-  }, [activeCompanyId, setSelectedCompany]);
-
   const handleCompanyChange = (newCompanyId: string) => {
-    startTransition(() => {
-      setSelectedCompany(newCompanyId);
-      setSelectedCompanyId(newCompanyId);
-      router.refresh();
+    startTransition(async () => {
+      try {
+        await setActiveCompanyId(newCompanyId);
+        router.refresh();
+      } catch (error) {
+        console.error("Error switching company:", error);
+      }
     });
   };
 
@@ -85,7 +79,7 @@ export function TeamSwitcher({ companyList, activeCompanyId, activeCompanyRole }
     );
   }
 
-  if (!selectedCompanyId && companyList?.length === 0) {
+  if (!activeCompanyId && companyList?.length === 0) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
@@ -143,7 +137,7 @@ export function TeamSwitcher({ companyList, activeCompanyId, activeCompanyRole }
               <DropdownMenuItem
                 key={company.id}
                 onClick={() => handleCompanyChange(company.id)}
-                className={`gap-2 p-2 ${selectedCompanyId === company.id ? "bg-accent" : ""}`}
+                className={`gap-2 p-2 ${activeCompanyId === company.id ? "bg-accent" : ""}`}
                 disabled={isPending}
               >
                 <div className="flex size-6 items-center justify-center rounded-md border">
@@ -151,8 +145,6 @@ export function TeamSwitcher({ companyList, activeCompanyId, activeCompanyRole }
                 </div>
                 <span className="flex-1 truncate">{company.name}</span>
                 {activeCompanyRole === "owner" && <ShieldCheck className="size-3.5 text-primary shrink-0" />}
-
-                {selectedCompanyId !== company.id}
               </DropdownMenuItem>
             ))}
             {companyList?.length === 0 && !isPending && (

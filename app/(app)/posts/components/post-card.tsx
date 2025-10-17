@@ -6,23 +6,19 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreVertical, Edit, Copy, Trash2, ChevronDown, Calendar, Clock } from "lucide-react";
+import type { Post } from "@prisma/client";
 
-export function PostCard() {
+export function PostCard({ post }: { post: Post }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Sample caption - replace with actual data
-  const caption =
-    "This is a sample caption for the post. It can be quite long and will be truncated after three lines. When the user clicks show more, they will see the full text. This is similar to how Instagram handles long captions.";
-
-  // Check if caption needs truncation (simplified - in production you'd measure actual rendered height)
-  const needsTruncation = caption.length > 120;
+  const needsTruncation = post.caption && post.caption.length > 120;
 
   return (
     <Card className="overflow-hidden py-0">
       <CardContent className="p-0">
         <div className="flex items-center justify-between p-3 border-b">
           <Badge variant="secondary" className="bg-blue-100 text-blue-700 hover:bg-blue-100">
-            Categoria
+            {post.categoryId ?? "Sem categoria"}
           </Badge>
 
           <DropdownMenu modal={false}>
@@ -53,7 +49,7 @@ export function PostCard() {
         </div>
 
         <div className="p-3">
-          <p className={`text-sm text-foreground ${!isExpanded && needsTruncation ? "line-clamp-3" : ""}`}>{caption}</p>
+          <p className={`text-sm text-foreground ${!isExpanded && needsTruncation ? "line-clamp-3" : ""}`}>{post.caption}</p>
           {needsTruncation && (
             <button onClick={() => setIsExpanded(!isExpanded)} className="text-sm text-blue-700 hover:text-blue-700 mt-1">
               {isExpanded ? "mostrar menos" : "mais"}

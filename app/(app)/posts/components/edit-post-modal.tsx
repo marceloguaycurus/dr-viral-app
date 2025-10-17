@@ -5,15 +5,16 @@ import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import Image from "next/image";
+import { usePostsStore } from "@/stores/posts-store";
 
 type EditPostModalProps = {
-  isOpen: boolean;
-  isLoading: boolean;
-  onClose: () => void;
   trigger?: React.ReactNode;
 };
 
-export function EditPostModal({ isOpen, isLoading, onClose, trigger }: EditPostModalProps) {
+export function EditPostModal({ trigger }: EditPostModalProps) {
+  const isOpen = usePostsStore((s) => s.isEditModalOpen);
+  const isLoading = usePostsStore((s) => s.isGenerating);
+  const onClose = usePostsStore((s) => s.closeEditModal);
   return (
     <Dialog open={isOpen} modal={false} onOpenChange={(open) => !open && onClose()}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
