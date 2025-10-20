@@ -96,22 +96,39 @@ export async function getPosts(companyId: string): Promise<Post[]> {
   });
 }
 
-export type CreatePostFormState = { success: boolean };
+export type CreatePostFormState = { success: boolean; error?: string };
 
 export async function createPostFromForm(_prevState: CreatePostFormState, formData: FormData): Promise<CreatePostFormState> {
-  const postType = String(formData.get("postType") ?? "");
-  const category = String(formData.get("category") ?? "");
-  const description = String(formData.get("description") ?? "");
-  const autoGenerateCaption = String(formData.get("autoGenerateCaption")) === "true";
-  const slides = Number(formData.get("slides") ?? 1);
+  try {
+    const postType = String(formData.get("postType") ?? "");
+    const category = String(formData.get("category") ?? "");
+    const description = String(formData.get("description") ?? "");
+    const autoGenerateCaption = String(formData.get("autoGenerateCaption")) === "true";
+    const slides = Number(formData.get("slides") ?? 1);
 
-  // TODO: Implement DB creation using prisma with the correct schema mapping.
-  void postType;
-  void category;
-  void description;
-  void autoGenerateCaption;
-  void slides;
-  return { success: true };
+    // Basic validation
+    if (!description.trim()) {
+      return { success: false, error: "Descrição é obrigatória" };
+    }
+    if (!category) {
+      return { success: false, error: "Categoria é obrigatória" };
+    }
+
+    // Simulate AI post generation with realistic delay
+    await new Promise((resolve) => setTimeout(resolve, 2000 + Math.random() * 2000)); // 2-4 seconds
+
+    // TODO: Implement actual AI post generation and DB creation using prisma with the correct schema mapping.
+    void postType;
+    void category;
+    void description;
+    void autoGenerateCaption;
+    void slides;
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error creating post:", error);
+    return { success: false, error: "Erro interno. Tente novamente." };
+  }
 }
 
 export async function getMembers(companyId: string): Promise<OrganizationMember[]> {
