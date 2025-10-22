@@ -1,17 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreVertical, Edit, Copy, Trash2, ChevronDown, Calendar, Clock } from "lucide-react";
-import type { Post } from "@prisma/client";
+import type { PostListItem } from "@/lib/utils/dataFunctions/bd-management";
+import Image from "next/image";
+import { createClient } from "@/lib/utils/supabase/client";
 
-export function PostCard({ post }: { post: Post }) {
+export function PostCard({ post }: { post: PostListItem }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const needsTruncation = post.caption && post.caption.length > 120;
+
+  const imageUrl = useMemo(() => {
+    const first = post.assets?.[0];
+    if (!first?.storagePath) return null;
+    if (first.storagePath.startsWith("http")) return first.storagePath;
+    const supabase = createClient();
+    const { data } = supabase.storage.from("posts").getPublicUrl(first.storagePath);
+    return data.publicUrl ?? null;
+  }, [post.assets]);
 
   return (
     <Card className="overflow-hidden py-0">
@@ -45,7 +56,11 @@ export function PostCard({ post }: { post: Post }) {
         </div>
 
         <div className="aspect-square bg-muted flex items-center justify-center">
-          <span className="text-muted-foreground text-sm">Post Preview</span>
+          {imageUrl ? (
+            <Image src={imageUrl} alt={post.caption ?? "Post"} width={100} height={100} />
+          ) : (
+            <div className="text-sm text-muted-foreground">Sem imagem</div>
+          )}
         </div>
 
         <div className="p-3">

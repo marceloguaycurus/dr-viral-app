@@ -1,11 +1,11 @@
 "use client";
 
-import type { Post } from "@prisma/client";
+import type { PostListItem } from "@/lib/utils/dataFunctions/bd-management";
 import { usePostsStore } from "@/stores/posts-store";
 import { PostCard } from "@/app/(app)/posts/components/post-card";
 import { PostEmptyState } from "@/app/(app)/posts/components/post-empty-state";
 
-type PostsGridProps = { posts: Post[] };
+type PostsGridProps = { posts: PostListItem[] };
 
 export function PostsGrid({ posts }: PostsGridProps) {
   const activeTab = usePostsStore((s) => s.activeTab);
@@ -27,7 +27,7 @@ export function PostsGrid({ posts }: PostsGridProps) {
       }
       return acc;
     },
-    { gerados: [] as Post[], agendados: [] as Post[], publicados: [] as Post[] }
+    { gerados: [] as PostListItem[], agendados: [] as PostListItem[], publicados: [] as PostListItem[] }
   );
 
   const currentPosts = grouped[activeTab];
@@ -37,7 +37,7 @@ export function PostsGrid({ posts }: PostsGridProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {currentPosts.map((post) => (
-        <PostCard key={post.id} post={post as Post} />
+        <PostCard key={post.id} post={post} />
       ))}
     </div>
   );

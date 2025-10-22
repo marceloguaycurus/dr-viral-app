@@ -77,7 +77,11 @@ export async function getMembershipsWithOrganizations(userId: string) {
 }
 
 // Posts
-export async function getPosts(companyId: string): Promise<Post[]> {
+export type PostListItem = Post & {
+  assets: { pageIndex: number; storagePath: string }[];
+};
+
+export async function getPosts(companyId: string): Promise<PostListItem[]> {
   if (!companyId) return [];
 
   return prisma.post.findMany({
@@ -91,6 +95,7 @@ export async function getPosts(companyId: string): Promise<Post[]> {
       assets: {
         orderBy: { pageIndex: "asc" },
         take: 1,
+        select: { pageIndex: true, storagePath: true },
       },
     },
   });
@@ -137,4 +142,9 @@ export async function getMembers(companyId: string): Promise<OrganizationMember[
       orgId: companyId,
     },
   });
+}
+
+export async function getAccountContext(): Promise<string> {
+  const accountContext = `Meu perfil no Instagram é @amandamoreiradeabreu. Sou cirurgiã oncologica e o meu objetivo é divulgar o meu trabalho para captar clientes e aumentar o número de seguidores`;
+  return accountContext;
 }
