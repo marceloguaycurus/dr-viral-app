@@ -6,23 +6,30 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreVertical, Edit, Copy, Trash2, ChevronDown, Calendar, Clock } from "lucide-react";
-import type { PostListItem } from "@/lib/utils/dataFunctions/bd-management";
+import type { PostListItem } from "@/lib/types/PostTypes";
 import Image from "next/image";
-import { createClient } from "@/lib/utils/supabase/client";
+import { usePostsStore } from "@/stores/posts-store";
+import { ConfirmDialog } from "@/app/(app)/posts/components/confirm-dialog";
+import { deletePost } from "@/app/actions/delete-post";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/stores/toast-store";
 
 export function PostCard({ post }: { post: PostListItem }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const router = useRouter();
+  const pushToast = useToast();
+  const hidePost = usePostsStore((s) => s.hidePost);
+  const unhidePost = usePostsStore((s) => s.unhidePost);
 
   const needsTruncation = post.caption && post.caption.length > 120;
 
   const imageUrl = useMemo(() => {
     const first = post.assets?.[0];
-    if (!first?.storagePath) return null;
-    if (first.storagePath.startsWith("http")) return first.storagePath;
-    const supabase = createClient();
-    const { data } = supabase.storage.from("posts").getPublicUrl(first.storagePath);
-    return data.publicUrl ?? null;
+    return first?.publicUrl ?? null;
   }, [post.assets]);
+
+  const openEdit = usePostsStore((s) => s.openEditWithPost);
 
   return (
     <Card className="overflow-hidden py-0">
@@ -39,7 +46,7 @@ export function PostCard({ post }: { post: PostListItem }) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => openEdit(post)}>
                 <Edit className="mr-2 h-4 w-4" />
                 Editar
               </DropdownMenuItem>
@@ -47,7 +54,7 @@ export function PostCard({ post }: { post: PostListItem }) {
                 <Copy className="mr-2 h-4 w-4" />
                 Duplicar
               </DropdownMenuItem>
-              <DropdownMenuItem variant="destructive">
+              <DropdownMenuItem variant="destructive" onClick={() => setConfirmOpen(true)}>
                 <Trash2 className="mr-2 h-4 w-4" />
                 Excluir
               </DropdownMenuItem>
@@ -55,9 +62,9 @@ export function PostCard({ post }: { post: PostListItem }) {
           </DropdownMenu>
         </div>
 
-        <div className="aspect-square bg-muted flex items-center justify-center">
+        <div className="relative aspect-square bg-muted">
           {imageUrl ? (
-            <Image src={imageUrl} alt={post.caption ?? "Post"} width={100} height={100} />
+            <Image src={imageUrl} alt={post.caption ?? "Post"} fill className="object-contain" />
           ) : (
             <div className="text-sm text-muted-foreground">Sem imagem</div>
           )}
@@ -98,6 +105,25 @@ export function PostCard({ post }: { post: PostListItem }) {
           </div>
         </div>
       </CardContent>
+      <ConfirmDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title="Excluir post?"
+        description="Tem certeza que deseja excluir este post?"
+        confirmText="Excluir"
+        cancelText="Cancelar"
+        onConfirm={async () => {
+          const res = await deletePost(post.id);
+          if (res.ok) {
+            hidePost(post.id);
+            pushToast({ kind: "success", code: "post_deleted", override: "Post excluído" });
+            router.refresh();
+          } else {
+            unhidePost(post.id);
+            pushToast({ kind: "error", code: "delete_failed", override: "Erro ao excluir" });
+          }
+        }}
+      />
     </Card>
   );
 }

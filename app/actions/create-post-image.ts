@@ -3,26 +3,20 @@
 import { createInstance } from "polotno-node";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { createClient } from "@/lib/utils/supabase/server";
-
-type Elements = {
-  header?: string;
-  subheader?: string;
-};
+import { postObjectSchema } from "@/lib/schemas/globalSchemas";
+import type z from "zod";
+import { uploadFile } from "@/lib/utils/dataFunctions/bd-management";
 
 type CreatePostParams = {
-  elements: Elements;
+  object: z.infer<typeof postObjectSchema>;
+  dimensions: { width: number; height: number };
   bucket?: string;
   storagePath?: string;
 };
 
-export async function createPostImage({ elements, bucket = "posts", storagePath }: CreatePostParams) {
-  const supabase = await createClient();
-  const header = (elements.header ?? "").toString();
-  const subheader = (elements.subheader ?? "").toString();
-
-  const width = 1080;
-  const height = 1080;
+export async function createPostImage({ object, dimensions, bucket = "posts", storagePath = "generated/" }: CreatePostParams) {
+  const { width, height } = dimensions;
+  const { header, subheader } = object;
 
   const json = {
     width,
@@ -78,8 +72,6 @@ export async function createPostImage({ elements, bucket = "posts", storagePath 
     ],
   };
 
-  // Build explicit file:// URL to Polotno's bundled editor to avoid incorrect
-  // file path resolution on some Windows/Next.js setups (e.g. file:\\ROOT).
   const editorUrl = pathToFileURL(path.join(process.cwd(), "node_modules", "polotno-node", "dist", "index.html")).toString();
 
   const instance = await createInstance({ key: process.env.POLOTNO_API_KEY!, url: editorUrl });
@@ -91,28 +83,12 @@ export async function createPostImage({ elements, bucket = "posts", storagePath 
 
     const bytes = Buffer.from(imageBase64, "base64");
 
-    const filePath = storagePath ?? `generated/${Date.now()}-${Math.random().toString(36).slice(2)}.png`;
-
-    const { error } = await supabase.storage.from(bucket).upload(filePath, bytes, {
-      contentType: "image/png",
-      upsert: true,
-    });
-
-    if (error) {
-      throw error;
-    }
-
-    const { data: pub } = supabase.storage.from(bucket).getPublicUrl(filePath);
-
-    return {
-      ok: true as const,
-      bucket,
-      path: filePath,
-      publicUrl: pub.publicUrl,
-    };
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.png`;
+    const filePath = `${storagePath}${fileName}`;
+    const path = await uploadFile(filePath, bytes, bucket);
+    return path;
   } catch (err) {
-    console.error("createPostImage error:", err);
-    return { ok: false as const, error: (err as Error).message };
+    throw new Error((err as Error).message);
   } finally {
     instance.close();
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import type { PostListItem } from "@/lib/utils/dataFunctions/bd-management";
+import type { PostListItem } from "@/lib/types/PostTypes";
 import { usePostsStore } from "@/stores/posts-store";
 import { PostCard } from "@/app/(app)/posts/components/post-card";
 import { PostEmptyState } from "@/app/(app)/posts/components/post-empty-state";
@@ -9,6 +9,7 @@ type PostsGridProps = { posts: PostListItem[] };
 
 export function PostsGrid({ posts }: PostsGridProps) {
   const activeTab = usePostsStore((s) => s.activeTab);
+  const hiddenPostIds = usePostsStore((s) => s.hiddenPostIds);
 
   const grouped = posts.reduce(
     (acc, post) => {
@@ -30,7 +31,7 @@ export function PostsGrid({ posts }: PostsGridProps) {
     { gerados: [] as PostListItem[], agendados: [] as PostListItem[], publicados: [] as PostListItem[] }
   );
 
-  const currentPosts = grouped[activeTab];
+  const currentPosts = grouped[activeTab].filter((p) => !hiddenPostIds.includes(p.id));
 
   if (currentPosts.length === 0) return <PostEmptyState />;
 

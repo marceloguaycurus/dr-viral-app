@@ -1,22 +1,28 @@
-export function PostLoadingState() {
-  return (
-    <div className="flex flex-col md:flex-row h-[500px] p-6 gap-6">
-      {/* Image skeleton - top on mobile, left on desktop */}
-      <div className="w-full md:w-1/2 aspect-square md:aspect-auto bg-muted animate-pulse rounded-lg" />
+import { Skeleton } from "@/components/ui/skeleton";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
-      {/* Content skeleton - bottom on mobile, right on desktop */}
-      <div className="flex-1 flex flex-col gap-4">
-        <div className="h-6 w-24 bg-muted animate-pulse rounded" />
-        <div className="flex-1 space-y-2">
-          <div className="h-4 bg-muted animate-pulse rounded w-full" />
-          <div className="h-4 bg-muted animate-pulse rounded w-5/6" />
-          <div className="h-4 bg-muted animate-pulse rounded w-4/6" />
+interface PostLoadingStateProps {
+  open: boolean;
+}
+
+export function PostLoadingState({ open }: PostLoadingStateProps) {
+  return (
+    <Dialog open={open}>
+      <DialogContent className="sm:max-w-[600px]">
+        {/* Content skeleton - bottom on mobile, right on desktop */}
+        <div className="flex-1 flex flex-col gap-4">
+          <Skeleton className="h-6 w-24" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+            <Skeleton className="h-4 w-4/6" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-10 flex-1" />
+            <Skeleton className="h-10 flex-1" />
+          </div>
         </div>
-        <div className="flex gap-2">
-          <div className="h-10 flex-1 bg-muted animate-pulse rounded" />
-          <div className="h-10 flex-1 bg-muted animate-pulse rounded" />
-        </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
